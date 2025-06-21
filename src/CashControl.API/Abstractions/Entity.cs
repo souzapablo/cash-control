@@ -1,4 +1,4 @@
-namespace CashControl.API.Common;
+namespace CashControl.API.Abstractions;
 
 public abstract class Entity
 {

@@ -1,4 +1,4 @@
-using CashControl.API.Entities;
+using CashControl.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

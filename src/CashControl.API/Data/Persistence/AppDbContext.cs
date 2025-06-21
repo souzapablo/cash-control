@@ -1,5 +1,5 @@
 using System.Reflection;
-using CashControl.API.Entities;
+using CashControl.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CashControl.API.Data.Persistence;
