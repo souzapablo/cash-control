@@ -1,4 +1,3 @@
-using CashControl.API.Abstractions;
 using CashControl.API.Domain.Entities;
 using CashControl.API.Domain.Repositories;
 
