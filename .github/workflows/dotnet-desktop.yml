@@ -27,4 +27,4 @@ jobs:
         run: dotnet build src/CashControl.API --configuration Release --no-restore
 
       - name: Test 
-        run: dotnet test test/CashControl.UnitTests --configuration Release --no-build
+        run: dotnet test src/CashControl.API --configuration Release --no-build
