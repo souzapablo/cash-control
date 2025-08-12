@@ -6,11 +6,11 @@ public record Request(string Username, string Email, string Password);
 public record Response(Guid Id);
 public class RegisterUserCommand
 {
-    public async Task<Response> HandleAsync(Request request, CancellationToken cancellationToken = default)
+    public async Task<Result<Response>> HandleAsync(Request request, CancellationToken cancellationToken = default)
     {
         var user = User.Register(request.Username, request.Password, request.Email);
 
-        return user.ToResponse();
+        return Result.Success(user.ToResponse());
     }
 }
 

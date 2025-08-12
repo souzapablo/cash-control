@@ -15,6 +15,7 @@ public class RegisterUserTests
         var result = await command.HandleAsync(request, CancellationToken.None);
 
         // Assert
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.Value?.Id);
+        Assert.Null(result.Error);
     }
 }
