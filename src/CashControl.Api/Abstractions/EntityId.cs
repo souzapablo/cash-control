@@ -2,7 +2,7 @@ namespace CashControl.Api.Abstractions;
 
 public abstract class EntityId<T> : IEquatable<EntityId<T>> where T : EntityId<T>
 {
-    protected Guid Value { get; }
+    public Guid Value { get; }
 
     protected EntityId(Guid value)
     {

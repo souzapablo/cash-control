@@ -1,6 +1,34 @@
+using CashControl.Api.Features;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(x =>
+{
+    x.SwaggerDoc("v1", new()
+    {
+        Title = "Cash Control API",
+        Version = "v1",
+        Description = "A simple API for managing personal finances",
+        Contact = new OpenApiContact
+        {
+            Name = "Pablo Souza",
+            Email = "contato@souzapablo.dev.br",
+            Url = new Uri("https://github.com/souzapablo/")
+        }
+    });
+});
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.MapGet("/", () => "Hello World!");
+
+app.MapEndpoints();
 
 app.Run();
