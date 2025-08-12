@@ -1,4 +1,4 @@
-using CashControl.Api.Features;
+using CashControl.App.Features;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

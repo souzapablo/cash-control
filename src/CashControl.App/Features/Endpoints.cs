@@ -1,7 +1,7 @@
-using CashControl.Api.Abstractions;
-using CashControl.Api.Features.Users.Commands;
+using CashControl.App.Abstractions;
+using CashControl.App.Features.Users.Commands;
 
-namespace CashControl.Api.Features;
+namespace CashControl.App.Features;
 
 public static class Endpoints
 {
@@ -12,7 +12,7 @@ public static class Endpoints
 
         endpoints.MapGroup("v1/users")
             .WithTags("Users")
-            .MapEndpoint<RegisterUserEnpdoint>();
+            .MapEndpoint<RegisterUserEndpoint>();
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

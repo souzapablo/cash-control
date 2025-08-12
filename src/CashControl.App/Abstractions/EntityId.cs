@@ -1,4 +1,4 @@
-namespace CashControl.Api.Abstractions;
+namespace CashControl.App.Abstractions;
 
 public abstract class EntityId<T> : IEquatable<EntityId<T>> where T : EntityId<T>
 {

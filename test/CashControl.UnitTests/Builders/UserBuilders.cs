@@ -1,4 +1,4 @@
-using CashControl.Api.Features.Users;
+using CashControl.App.Features.Users;
 
 namespace CashControl.UnitTests.Builders;
 

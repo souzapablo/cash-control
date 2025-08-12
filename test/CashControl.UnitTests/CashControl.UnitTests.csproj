@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CashControl.Api\CashControl.Api.csproj" />
+    <ProjectReference Include="..\..\src\CashControl.App\CashControl.App.csproj" />
   </ItemGroup>
 
 </Project>

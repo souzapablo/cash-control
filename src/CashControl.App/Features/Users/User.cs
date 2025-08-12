@@ -1,6 +1,6 @@
-using CashControl.Api.Abstractions;
+using CashControl.App.Abstractions;
 
-namespace CashControl.Api.Features.Users;
+namespace CashControl.App.Features.Users;
 
 public class User : Entity<UserId>
 {

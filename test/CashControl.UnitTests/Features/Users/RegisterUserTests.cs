@@ -1,4 +1,4 @@
-using CashControl.Api.Features.Users.Commands;
+using CashControl.App.Features.Users.Commands;
 
 namespace CashControl.UnitTests.Features.Users;
 
@@ -8,11 +8,11 @@ public class RegisterUserTests
     public async Task Should_RegisterANewUser_When_RequestIsValid()
     {
         // Arrange
-        var request = new Request("Test", "test@email.com", "password");
-        var command = new RegisterUserCommand();
+        var request = new RegisterUserCommand("Test", "test@email.com", "password");
+        var handler = new RegisterUserHandler();
 
         // Act
-        var result = await command.HandleAsync(request, CancellationToken.None);
+        var result = await handler.HandleAsync(request, CancellationToken.None);
 
         // Assert
         Assert.NotEqual(Guid.Empty, result.Value?.Id);
