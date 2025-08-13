@@ -1,4 +1,6 @@
 using CashControl.App.Features.Users.Commands;
+using Microsoft.Extensions.Configuration;
+using NSubstitute;
 
 namespace CashControl.UnitTests.Features.Users;
 
@@ -8,8 +10,10 @@ public class RegisterUserTests
     public async Task Should_RegisterANewUser_When_RequestIsValid()
     {
         // Arrange
+        var configuration = Substitute.For<IConfiguration>();
+        configuration["Security:PasswordPepper"].Returns("test-pepper-value");
         var request = new RegisterUserCommand("Test", "test@email.com", "password");
-        var handler = new RegisterUserHandler();
+        var handler = new RegisterUserHandler(configuration);
 
         // Act
         var result = await handler.HandleAsync(request, CancellationToken.None);

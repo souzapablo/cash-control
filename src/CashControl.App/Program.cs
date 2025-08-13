@@ -1,13 +1,14 @@
 using CashControl.App.Features;
+using CashControl.App.Features.Users.Commands;
 using CashControl.App.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
+builder.Services.AddScoped<IRegisterUserHandler, RegisterUserHandler>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {

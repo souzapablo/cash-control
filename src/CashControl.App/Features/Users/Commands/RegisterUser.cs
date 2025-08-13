@@ -1,4 +1,5 @@
 using CashControl.App.Abstractions;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace CashControl.App.Features.Users.Commands;
 
@@ -8,11 +9,18 @@ public interface IRegisterUserHandler
 {
     Task<Result<RegisterUserResponse>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken = default);
 }
-public class RegisterUserHandler : IRegisterUserHandler
+public class RegisterUserHandler(IConfiguration configuration) : IRegisterUserHandler
 {
     public async Task<Result<RegisterUserResponse>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        var user = User.Register(command.Username, command.Password, command.Email);
+        var pepper = configuration["Security:PasswordPepper"];
+        
+        if (string.IsNullOrWhiteSpace(pepper))
+            return Result.Failure<RegisterUserResponse>(new Error("CONFIGURATION", "Password pepper not configured."));
+
+        var passwordHash = BCryptNet.HashPassword(command.Password + pepper);
+
+        var user = User.Register(command.Username, passwordHash, command.Email);
 
         return Result.Success(user.ToResponse());
     }    
