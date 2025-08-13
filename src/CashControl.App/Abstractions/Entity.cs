@@ -8,7 +8,7 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : EntityId
     }
 
     public TId Id { get; }
-    public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime? LastUpdate { get; private set; }
     public bool IsActive { get; private set; } = true;
 
