@@ -26,8 +26,8 @@ public class RegisterUserTests
         Assert.Null(result.Error);
     }
 
-    [Fact(DisplayName = "Handle should not register an user with existing email")]
-    public async Task Should_RegisterNotRegisterAnUser_When_EmailIsAlreadyRegistered()
+    [Fact(DisplayName = "Handle should not register a user with existing email")]
+    public async Task Should_NotRegisterAUser_When_EmailIsAlreadyRegistered()
     {
         // Arrange
         SetSecurityReturn();
@@ -41,6 +41,20 @@ public class RegisterUserTests
         Assert.Equal(UserErrors.EmailAlreadyRegistered, result.Error);
         Assert.False(result.IsSuccess);
         _repository.DidNotReceive().Register(Arg.Any<User>());
+    }
+
+    [Fact(DisplayName = "Handle should not register an user without pepper")]
+    public async Task Should_NotRegisterAnUser_When_PepperIsNotFound()
+    {
+        // Arrange
+        _repository.ExistWithEmailAsync("test@email.com", CancellationToken.None)
+            .Returns(false);
+
+        // Act
+        var action = async () => await Handler.HandleAsync(Command, CancellationToken.None);
+
+        // Assert
+        await Assert.ThrowsAsync<UserException>(action);
     }
 
     private static RegisterUserCommand Command => new("Test", "test@email.com", "password");

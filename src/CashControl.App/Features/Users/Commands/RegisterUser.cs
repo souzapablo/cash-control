@@ -20,7 +20,7 @@ public class RegisterUserHandler(IConfiguration configuration,
 
         var pepper = configuration["Security:PasswordPepper"];
         if (string.IsNullOrWhiteSpace(pepper))
-            return Result.Failure<RegisterUserResponse>(new Error("CONFIGURATION", "Password pepper not configured."));
+            throw new UserException(UserErrors.PepperNotFound);
 
         var passwordHash = BCryptNet.HashPassword(command.Password + pepper);
 
