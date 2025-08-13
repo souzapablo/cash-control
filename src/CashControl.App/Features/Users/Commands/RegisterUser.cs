@@ -9,18 +9,22 @@ public interface IRegisterUserHandler
 {
     Task<Result<RegisterUserResponse>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken = default);
 }
-public class RegisterUserHandler(IConfiguration configuration) : IRegisterUserHandler
+public class RegisterUserHandler(IConfiguration configuration,
+    IUserRepository repository) : IRegisterUserHandler
 {
     public async Task<Result<RegisterUserResponse>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
         var pepper = configuration["Security:PasswordPepper"];
-        
+
         if (string.IsNullOrWhiteSpace(pepper))
             return Result.Failure<RegisterUserResponse>(new Error("CONFIGURATION", "Password pepper not configured."));
 
         var passwordHash = BCryptNet.HashPassword(command.Password + pepper);
 
         var user = User.Register(command.Username, passwordHash, command.Email);
+
+        repository.Register(user);
+        await repository.SaveChangesAsync(cancellationToken);
 
         return Result.Success(user.ToResponse());
     }    

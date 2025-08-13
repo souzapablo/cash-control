@@ -1,4 +1,5 @@
 using CashControl.App.Features;
+using CashControl.App.Features.Users;
 using CashControl.App.Features.Users.Commands;
 using CashControl.App.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 builder.Services.AddScoped<IRegisterUserHandler, RegisterUserHandler>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
