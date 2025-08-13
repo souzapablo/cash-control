@@ -14,8 +14,11 @@ public class RegisterUserHandler(IConfiguration configuration,
 {
     public async Task<Result<RegisterUserResponse>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        var pepper = configuration["Security:PasswordPepper"];
+        var emailRegistered = await repository.ExistWithEmailAsync(command.Email, cancellationToken);
+        if (emailRegistered)
+            return Result.Failure<RegisterUserResponse>(UserErrors.EmailAlreadyRegistered);
 
+        var pepper = configuration["Security:PasswordPepper"];
         if (string.IsNullOrWhiteSpace(pepper))
             return Result.Failure<RegisterUserResponse>(new Error("CONFIGURATION", "Password pepper not configured."));
 

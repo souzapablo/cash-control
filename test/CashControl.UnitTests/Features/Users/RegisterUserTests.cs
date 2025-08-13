@@ -14,16 +14,37 @@ public class RegisterUserTests
     public async Task Should_RegisterANewUser_When_RequestIsValid()
     {
         // Arrange
-        _configuration["Security:PasswordPepper"].Returns("test-pepper-value");
-        
-        var request = new RegisterUserCommand("Test", "test@email.com", "password");
-        var handler = new RegisterUserHandler(_configuration, _repository);
+        SetSecurityReturn();
+        _repository.ExistWithEmailAsync("test@email.com", CancellationToken.None)
+            .Returns(false);
 
         // Act
-        var result = await handler.HandleAsync(request, CancellationToken.None);
+        var result = await Handler.HandleAsync(Command, CancellationToken.None);
 
         // Assert
         Assert.NotEqual(Guid.Empty, result.Value?.Id);
         Assert.Null(result.Error);
     }
+
+    [Fact(DisplayName = "Handle should not register an user with existing email")]
+    public async Task Should_RegisterNotRegisterAnUser_When_EmailIsAlreadyRegistered()
+    {
+        // Arrange
+        SetSecurityReturn();
+        _repository.ExistWithEmailAsync("test@email.com", CancellationToken.None)
+            .Returns(true);
+
+        // Act
+        var result = await Handler.HandleAsync(Command, CancellationToken.None);
+
+        // Assert
+        Assert.Equal(UserErrors.EmailAlreadyRegistered, result.Error);
+        Assert.False(result.IsSuccess);
+        _repository.DidNotReceive().Register(Arg.Any<User>());
+    }
+
+    private static RegisterUserCommand Command => new("Test", "test@email.com", "password");
+    private RegisterUserHandler Handler => new(_configuration, _repository);
+    private void SetSecurityReturn() =>
+        _configuration["Security:PasswordPepper"].Returns("test-pepper-value");
 }
