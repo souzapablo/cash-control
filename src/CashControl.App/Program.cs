@@ -42,3 +42,5 @@ app.MapGet("/", () => "Hello World!");
 app.MapEndpoints();
 
 app.Run();
+
+partial class Program { }
