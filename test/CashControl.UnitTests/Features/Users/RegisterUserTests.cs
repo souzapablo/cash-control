@@ -1,5 +1,4 @@
 using CashControl.App.Features.Users;
-using CashControl.App.Features.Users.Commands;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 

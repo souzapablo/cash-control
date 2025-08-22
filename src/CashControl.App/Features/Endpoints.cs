@@ -1,5 +1,5 @@
 using CashControl.App.Abstractions;
-using CashControl.App.Features.Users.Commands;
+using CashControl.App.Features.Users;
 
 namespace CashControl.App.Features;
 

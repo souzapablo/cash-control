@@ -1,8 +1,7 @@
-using CashControl.App.Features.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CashControl.App.Infrastructure.Data.Configurations;
+namespace CashControl.App.Features.Users;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

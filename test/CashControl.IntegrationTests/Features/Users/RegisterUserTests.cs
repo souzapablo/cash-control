@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using CashControl.App.Features.Users;
-using CashControl.App.Features.Users.Commands;
 using CashControl.IntegrationTests.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,7 +71,6 @@ public class RegisterUserEndpointTests : BaseIntegrationTest
         await _client.PostAsJsonAsync(ApiRoute, request);
         var response = await _client.PostAsJsonAsync(ApiRoute, request);
         var rawContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(rawContent); // See what you get
         var result = JsonSerializer.Deserialize<Result<RegisterUserResponse>>(rawContent, _jsonOptions);
 
         // Assert

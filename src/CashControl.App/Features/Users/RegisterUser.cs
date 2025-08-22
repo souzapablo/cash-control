@@ -1,7 +1,7 @@
 using CashControl.App.Abstractions;
 using BCryptNet = BCrypt.Net.BCrypt;
 
-namespace CashControl.App.Features.Users.Commands;
+namespace CashControl.App.Features.Users;
 
 public record RegisterUserCommand(string Username, string Email, string Password);
 public record RegisterUserResponse(Guid Id);
