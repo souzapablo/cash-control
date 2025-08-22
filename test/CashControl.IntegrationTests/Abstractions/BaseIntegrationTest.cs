@@ -8,10 +8,12 @@ public class BaseIntegrationTest
 {
     private readonly IServiceScope _scope;
     protected readonly AppDbContext DbContext;
+    protected readonly HttpClient _client;
     protected BaseIntegrationTest(IntegrationTestWebAppFactory factory)
     {
         _scope = factory.Services.CreateScope();
 
         DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _client = factory.CreateClientWithPort();
     }
 }

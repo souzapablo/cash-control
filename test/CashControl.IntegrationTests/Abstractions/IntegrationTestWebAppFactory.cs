@@ -41,9 +41,19 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             services.AddDbContext<AppDbContext>(options =>
             {
                 options
-                    .UseNpgsql(_dbContainer.GetConnectionString());
+                    .UseNpgsql(_dbContainer.GetConnectionString())
+                    .UseSnakeCaseNamingConvention();
             });
         });
+
+        builder.UseUrls("https://localhost:7001");
+    }
+
+    public HttpClient CreateClientWithPort()
+    {
+        var client = CreateClient();
+        client.BaseAddress = new Uri("https://localhost:7001/");
+        return client;
     }
 
     Task IAsyncLifetime.DisposeAsync() => _dbContainer.StopAsync();

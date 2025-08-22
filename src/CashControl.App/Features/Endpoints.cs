@@ -8,7 +8,7 @@ public static class Endpoints
     public static void MapEndpoints(this WebApplication app)
     {
         var endpoints = app
-            .MapGroup("");
+            .MapGroup("api");
 
         endpoints.MapGroup("v1/users")
             .WithTags("Users")
