@@ -1,6 +1,7 @@
 using CashControl.App.Features;
 using CashControl.App.Features.Users;
 using CashControl.App.Infrastructure.Data;
+using CashControl.App.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
