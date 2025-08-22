@@ -1,16 +1,12 @@
 using CashControl.App.Abstractions;
-using CashControl.App.Features.Users;
 
-namespace CashControl.App.Features;
+namespace CashControl.App.Features.Users;
 
-public static class Endpoints
+public static class UserEndpoints
 {
     public static void MapEndpoints(this WebApplication app)
     {
-        var endpoints = app
-            .MapGroup("api");
-
-        endpoints.MapGroup("v1/users")
+        app.MapGroup("api/v1/users")
             .WithTags("Users")
             .MapEndpoint<RegisterUserEndpoint>();
     }
