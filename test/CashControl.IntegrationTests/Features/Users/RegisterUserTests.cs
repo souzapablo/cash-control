@@ -60,4 +60,23 @@ public class RegisterUserEndpointTests : BaseIntegrationTest
         Assert.Equal(request.Email, createdUser.Email);
         Assert.Equal(request.Username, createdUser.Username);
     }
+    
+
+    [Fact(DisplayName = "Should return 400 Bad Request when email is already registered")]
+    public async Task ShouldReturnBadRequest_WhenEmailIsAlreadyRegistered()
+    {
+        // Arrange
+        var request = new RegisterUserCommand("duplicated", "duplicated@email.com", "password");
+
+        // Act
+        await _client.PostAsJsonAsync(ApiRoute, request);
+        var response = await _client.PostAsJsonAsync(ApiRoute, request);
+        var rawContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(rawContent); // See what you get
+        var result = JsonSerializer.Deserialize<Result<RegisterUserResponse>>(rawContent, _jsonOptions);
+
+        // Assert
+        Assert.False(result!.IsSuccess);
+        Assert.Equal(UserErrors.EmailAlreadyRegistered, result.Error);
+    }
 }

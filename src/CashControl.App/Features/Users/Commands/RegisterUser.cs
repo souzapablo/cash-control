@@ -48,7 +48,7 @@ public class RegisterUserEndpoint : IEndpoint
         var result = await handler.HandleAsync(request, cancellationToken);
 
         if (!result.IsSuccess)
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest(result);
         
         return TypedResults.Created($"api/v1/users/{result.Value?.Id}", result);
     }
