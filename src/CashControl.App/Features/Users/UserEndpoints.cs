@@ -10,7 +10,7 @@ public static class UserEndpoints
             .WithTags("Users")
             .MapEndpoint<RegisterUserEndpoint>();
     }
-    
+
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
         where TEndpoint : IEndpoint
     {

@@ -10,7 +10,7 @@ public abstract class EntityId<T> : IEquatable<EntityId<T>> where T : EntityId<T
     }
     public static T New() => (T)Activator.CreateInstance(typeof(T), Guid.NewGuid())!;
     public static T From(Guid value) => (T)Activator.CreateInstance(typeof(T), value)!;
-    
+
     public override bool Equals(object? obj) => obj is EntityId<T> other && Equals(other);
 
     public bool Equals(EntityId<T>? other) => other is not null && Value.Equals(other.Value);

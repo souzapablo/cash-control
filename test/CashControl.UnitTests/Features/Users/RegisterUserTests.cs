@@ -55,7 +55,7 @@ public class RegisterUserTests
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => handler.HandleAsync(Command, CancellationToken.None));
         Assert.Equal("Password pepper configuration is missing", exception.Message);
-        
+
         context.Dispose();
     }
 

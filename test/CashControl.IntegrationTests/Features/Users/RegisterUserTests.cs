@@ -1,9 +1,9 @@
-using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
 using CashControl.App.Features.Users;
 using CashControl.IntegrationTests.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace CashControl.IntegrationTests.Features.Users;
 
@@ -58,7 +58,7 @@ public class RegisterUserEndpointTests : BaseIntegrationTest
         Assert.Equal(request.Email, createdUser.Email);
         Assert.Equal(request.Username, createdUser.Username);
     }
-    
+
 
     [Fact(DisplayName = "Should return 400 Bad Request when email is already registered")]
     public async Task ShouldReturnBadRequest_WhenEmailIsAlreadyRegistered()

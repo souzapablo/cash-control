@@ -53,8 +53,8 @@ public class RegisterUserEndpoint : IEndpoint
 
         if (!result.IsSuccess)
             return TypedResults.BadRequest(result);
-        
+
         return TypedResults.Created($"api/v1/users/{result.Value?.Id}", result);
     }
-    
+
 }

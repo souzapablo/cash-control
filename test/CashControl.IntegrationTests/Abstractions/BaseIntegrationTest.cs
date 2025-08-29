@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CashControl.IntegrationTests.Abstractions;
 
-public class BaseIntegrationTest 
+public class BaseIntegrationTest
     : IClassFixture<IntegrationTestWebAppFactory>
 {
     private readonly IServiceScope _scope;
