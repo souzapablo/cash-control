@@ -32,7 +32,7 @@ public class Create
 
             Result<Guid> result = Result.Success(account.Id.Value);
 
-            return Results.Created($"accounts/{result}", result);
+            return Results.Created($"accounts/{result.Value}", result);
         }
     }
 }
