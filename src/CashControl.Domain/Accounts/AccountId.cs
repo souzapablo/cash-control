@@ -4,7 +4,7 @@ namespace CashControl.Domain.Accounts;
 
 public class AccountId : EntityId<Guid>
 {
-    private AccountId() { }
+    protected AccountId() { }
 
     public AccountId(Guid value) : base(value) { }
 
