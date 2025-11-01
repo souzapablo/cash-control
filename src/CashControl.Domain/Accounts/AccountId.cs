@@ -9,4 +9,5 @@ public class AccountId : EntityId<Guid>
     public AccountId(Guid value) : base(value) { }
 
     public static AccountId Create(Guid value) => new(value);
+    public static AccountId CreateNew() => new(Guid.NewGuid());
 }

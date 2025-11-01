@@ -1,3 +1,4 @@
+using CashControl.Api.Abstractions;
 using CashControl.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,6 @@ builder.Services.AddInfrastructureModules(configuration);
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapEndpoints();
 
 app.Run();

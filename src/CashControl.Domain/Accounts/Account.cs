@@ -9,6 +9,7 @@ public class Account : Entity<AccountId>
     
     protected Account(string name)
     {
+        Id = AccountId.CreateNew();
         Name = name;
     }
 
