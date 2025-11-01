@@ -12,4 +12,6 @@ public abstract class Entity<TId>
     
     public TId Id { get; protected set; } = default!;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime? LastUpdate { get; private set; }
+    public bool IsActive { get; private set; } = true;
 }
