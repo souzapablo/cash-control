@@ -1,6 +1,6 @@
 using CashControl.Api.Abstractions;
 using CashControl.Domain.Accounts;
-using CashControl.Domain.ValueObjects;
+using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
 
 namespace CashControl.Api.Feature.Accounts;
@@ -8,7 +8,7 @@ namespace CashControl.Api.Feature.Accounts;
 public class Create
 {
     public record Command(string Name);
-    public record Result(Guid Id);
+    public record Response(Guid Id);
 
     public class CreateAccountEndpoint : IEndpoint
     {
@@ -18,7 +18,7 @@ public class Create
                 .WithSummary("Creates a new account")
                 .WithDescription("Creates a new account with the given name for the user with zero balance.")
                 .WithOrder(1)
-                .Produces<Result>();
+                .Produces<Result<Response>>();
             
         private static async Task<IResult> HandleAsync(
             Command command,
@@ -30,9 +30,9 @@ public class Create
             context.Accounts.Add(account);
             await context.SaveChangesAsync(cancellationToken);
 
-            Result result = new(account.Id);
+            Result<Guid> result = Result.Success(account.Id.Value);
 
-            return Results.Created($"accounts/{result.Id}", result);
+            return Results.Created($"accounts/{result}", result);
         }
     }
 }
