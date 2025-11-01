@@ -12,6 +12,8 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "A simple personal finance app API"
     });
+    
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", ".") ?? type.Name);
 });
 
 var configuration = builder.Configuration;  

@@ -17,7 +17,7 @@ public class Create
                 .WithName("Accounts: Create")
                 .WithSummary("Creates a new account")
                 .WithDescription("Creates a new account with the given name for the user with zero balance.")
-                .WithOrder(1)
+                .WithOrder(2)
                 .Produces<Result<Response>>();
             
         private static async Task<IResult> HandleAsync(

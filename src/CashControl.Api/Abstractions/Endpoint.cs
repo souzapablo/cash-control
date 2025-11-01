@@ -1,4 +1,5 @@
 using static CashControl.Api.Feature.Accounts.Create;
+using static CashControl.Api.Feature.Accounts.Details;
 
 namespace CashControl.Api.Abstractions;
 
@@ -14,7 +15,8 @@ public static class Endpoint
         
         endpoints.MapGroup("/accounts")
             .WithTags("Accounts")
-            .MapEndpoint<CreateAccountEndpoint>();
+            .MapEndpoint<CreateAccountEndpoint>()
+            .MapEndpoint<GetAccountByIdEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
