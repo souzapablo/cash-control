@@ -48,13 +48,21 @@ public record Money
         
         return Value > other.Value;
     }
-    
+
     public bool IsLessThan(Money other)
     {
         if (Currency != other.Currency)
             throw new InvalidOperationException("Cannot compare money with different currencies");
-        
+
         return Value < other.Value;
+    }
+    
+    public bool IsEqualTo(Money other)
+    {
+        if (Currency != other.Currency)
+            throw new InvalidOperationException("Cannot compare money with different currencies");
+        
+        return Value == other.Value;
     }
     
     public bool IsZero => Value == 0;

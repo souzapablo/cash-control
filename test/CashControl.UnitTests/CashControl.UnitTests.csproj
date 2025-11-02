@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CashControl.Domain\CashControl.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

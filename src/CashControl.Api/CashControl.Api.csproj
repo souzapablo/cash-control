@@ -4,9 +4,11 @@
     <ProjectReference Include="..\CashControl.Domain\CashControl.Domain.csproj" />
     <ProjectReference Include="..\CashControl.Infrastructure\CashControl.Infrastructure.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
+      <InternalsVisibleTo Include="IntegrationTests" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

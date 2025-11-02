@@ -1,4 +1,3 @@
-using System;
 using CashControl.Domain.Primitives;
 
 namespace CashControl.Api.Feature.Accounts;
