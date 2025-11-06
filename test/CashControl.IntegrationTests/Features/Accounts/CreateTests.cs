@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using CashControl.Domain.Accounts;
-using CashControl.Domain.Enums;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models;
 using Xunit;
