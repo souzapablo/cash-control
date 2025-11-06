@@ -83,6 +83,7 @@ public class DeleteTests : BaseIntegrationTest
         Account? accountInDb = await Context
             .Accounts
             .AsNoTracking()
+            .IgnoreQueryFilters()
             .SingleOrDefaultAsync(a => a.Id == accountId);
         return accountInDb;
     }

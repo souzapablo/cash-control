@@ -11,6 +11,8 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
         builder.HasKey(account => account.Id);
 
+        builder.HasQueryFilter(account => account.IsActive);
+
         builder.Property(account => account.Id)
             .HasConversion(
                     id => id.Value,
