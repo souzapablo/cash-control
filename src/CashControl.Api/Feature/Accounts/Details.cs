@@ -3,6 +3,7 @@ using CashControl.Api.Responses.ValueObjects;
 using CashControl.Domain.Accounts;
 using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CashControl.Api.Feature.Accounts;
@@ -17,12 +18,9 @@ public class Details
             => app.MapGet("/{id:guid}", HandleAsync)
                 .WithName("Accounts: Get by id")
                 .WithSummary("Gets an account by its ID")
-                .WithDescription("Retrieves the details of an account by its ID.")
-                .WithOrder(1)
-                .Produces<Result<Response>>(StatusCodes.Status200OK)
-                .Produces<Result>(StatusCodes.Status404NotFound);
+                .WithDescription("Retrieves the details of an account by its ID.");
 
-        private static async Task<IResult> HandleAsync(
+        private static async Task<Results<NotFound<Result>, Ok<Result<Response>>>> HandleAsync(
             Guid id,
             CashControlDbContext context,
             CancellationToken cancellationToken)
@@ -36,7 +34,7 @@ public class Details
             if (account is null)
             {
                 Result failureResult = Result.Failure(Errors.AccountNotFound(id));
-                return Results.NotFound(failureResult);
+                return TypedResults.NotFound(failureResult);
             }
 
             Response response = new(
@@ -45,7 +43,7 @@ public class Details
                 new MoneyResponse(account.Balance));
                 
             Result<Response> result = Result.Success(response);
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         }
     }
 }

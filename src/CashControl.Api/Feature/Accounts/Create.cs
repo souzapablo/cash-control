@@ -2,6 +2,7 @@ using CashControl.Api.Abstractions;
 using CashControl.Domain.Accounts;
 using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CashControl.Api.Feature.Accounts;
 
@@ -16,11 +17,10 @@ public class Create
             => app.MapPost("/", HandleAsync)
                 .WithName("Accounts: Create")
                 .WithSummary("Creates a new account")
-                .WithDescription("Creates a new account with the given name for the user with zero balance.")
-                .WithOrder(2)
-                .Produces<Result<Response>>();
+                .WithDescription("Creates a new account with the given name for the user with zero balance.");
 
-        private static async Task<IResult> HandleAsync(
+        private static async Task<
+            Results<BadRequest<Result>,Created<Result<Response>>>> HandleAsync(
             Command command,
             CashControlDbContext context,
             CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public class Create
             if (error is not null)
             {
                 var failureResult = Result.Failure(error);
-                return Results.BadRequest(failureResult);
+                return TypedResults.BadRequest(failureResult);
             }
 
             Account account = Account.Create(command.Name);
@@ -40,7 +40,7 @@ public class Create
 
             Result<Response> result = Result.Success(new Response(account.Id.Value));
 
-            return Results.Created($"accounts/{result.Value.Id}", result);
+            return TypedResults.Created($"accounts/{result.Value.Id}", result);
         }
 
         private static Error? Validate(Command command)

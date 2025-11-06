@@ -18,10 +18,7 @@ public class Delete
             => app.MapDelete("/{id:guid}", HandleAsync)
                 .WithName("Accounts: Delete")
                 .WithSummary("Deletes an account")
-                .WithDescription("Deletes an account by its ID.")
-                .WithOrder(3)
-                .Produces(StatusCodes.Status204NoContent)
-                .Produces<Result>(StatusCodes.Status404NotFound);
+                .WithDescription("Deletes an account by its ID.");
     
         private static async Task<Results<NoContent, NotFound<Result>>> HandleAsync(
             [FromRoute] Guid id,
