@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CashControl.Infrastructure.Data.Migrations
+namespace CashControl.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

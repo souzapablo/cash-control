@@ -15,7 +15,7 @@ public class AccountTests
         Account account = Account.Create("Test Account");
 
         // Assert
-        Assert.Equal(decimal.Zero, account.Balance.Value);
+        Assert.Equal(decimal.Zero, account.Balance.Amount);
         Assert.Equal(Currency.BRL, account.Balance.Currency);
     }
 }

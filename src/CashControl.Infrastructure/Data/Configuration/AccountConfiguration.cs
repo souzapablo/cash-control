@@ -30,7 +30,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.OwnsOne(account => account.Balance, balanceBuilder =>
         {
-            balanceBuilder.Property(money => money.Value)
+            balanceBuilder.Property(money => money.Amount)
                 .HasColumnName("balance_amount")
                 .HasPrecision(18, 4)
                 .HasDefaultValue(0m)

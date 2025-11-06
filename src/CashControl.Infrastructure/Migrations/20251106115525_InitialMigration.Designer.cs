@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CashControl.Infrastructure.Data.Migrations
+namespace CashControl.Infrastructure.Migrations
 {
     [DbContext(typeof(CashControlDbContext))]
-    [Migration("20251101140457_InitialMigration")]
+    [Migration("20251106115525_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace CashControl.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.21")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -67,18 +67,18 @@ namespace CashControl.Infrastructure.Data.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
-                            b1.Property<int>("Currency")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer")
-                                .HasDefaultValue(0)
-                                .HasColumnName("balance_currency");
-
-                            b1.Property<decimal>("Value")
+                            b1.Property<decimal>("Amount")
                                 .ValueGeneratedOnAdd()
                                 .HasPrecision(18, 4)
                                 .HasColumnType("numeric(18,4)")
                                 .HasDefaultValue(0m)
                                 .HasColumnName("balance_amount");
+
+                            b1.Property<int>("Currency")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(0)
+                                .HasColumnName("balance_currency");
 
                             b1.HasKey("AccountId");
 

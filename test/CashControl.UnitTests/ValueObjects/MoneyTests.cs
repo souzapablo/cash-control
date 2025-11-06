@@ -17,7 +17,7 @@ public class MoneyTests
         Money money = Money.Create(value, currency);
 
         // Assert
-        Assert.Equal(value, money.Value);
+        Assert.Equal(value, money.Amount);
         Assert.Equal(currency, money.Currency);
     }
 
@@ -32,7 +32,7 @@ public class MoneyTests
         Money money = Money.Create(value, currency);
 
         // Assert
-        Assert.Equal(0m, money.Value);
+        Assert.Equal(0m, money.Amount);
         Assert.Equal(currency, money.Currency);
     }
 
@@ -52,7 +52,7 @@ public class MoneyTests
         Money result = money1.Add(money2);
 
         // Assert
-        Assert.Equal(value1 + value2, result.Value);
+        Assert.Equal(value1 + value2, result.Amount);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -86,7 +86,7 @@ public class MoneyTests
         Money result = money1.Subtract(money2);
 
         // Assert
-        Assert.Equal(value1 - value2, result.Value);
+        Assert.Equal(value1 - value2, result.Amount);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -118,7 +118,7 @@ public class MoneyTests
         Money result = money.Multiply(3);
 
         // Assert
-        Assert.Equal(value * 3, result.Value);
+        Assert.Equal(value * 3, result.Amount);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -135,7 +135,7 @@ public class MoneyTests
         Money result = money.Negate();
 
         // Assert
-        Assert.Equal(-value, result.Value);
+        Assert.Equal(-value, result.Amount);
         Assert.Equal(currency, result.Currency);
     }
 
