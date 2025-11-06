@@ -1,8 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using CashControl.Domain.Accounts;
+using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
-using CashControl.IntegrationTests.Models;
+using CashControl.IntegrationTests.Models.Accounts;
 using Xunit;
 using static CashControl.Api.Feature.Accounts.Create;
 
@@ -37,8 +38,8 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.NotNull(response.Headers.Location);
-        
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         var location = response.Headers.Location.ToString();
         Assert.Contains(result!.Value.Id.ToString(), location);
     }
@@ -54,7 +55,7 @@ public class CreateTests : BaseIntegrationTest
         HttpResponseMessage response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
         Assert.NotNull(accountInDb);
@@ -74,7 +75,7 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
         Assert.NotNull(accountInDb);
@@ -93,7 +94,7 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
         Assert.NotNull(accountInDb);
@@ -112,7 +113,7 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
         Assert.NotNull(accountInDb);
@@ -130,7 +131,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be a string with a maximum length of '200'."),
             result?.Error);
@@ -146,7 +147,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be informed."),
             result?.Error);
@@ -162,7 +163,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = await response.Content.ReadFromJsonAsync<Result<Response>>();
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be informed."),
             result?.Error);

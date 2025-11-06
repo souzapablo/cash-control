@@ -5,7 +5,6 @@ using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models.Accounts;
 using Xunit;
-using static CashControl.Api.Feature.Accounts.Details;
 
 namespace CashControl.IntegrationTests.Features.Accounts;
 
@@ -65,7 +64,7 @@ public class DetailsTests : BaseIntegrationTest
 
         // Act
         var response = await Client.GetAsync($"/api/accounts/{accountId}");
-        var result = response.ReadAsResultAsync<Response>();
+        var result = response.ReadAsResultAsync<AccountDetailsResponse>();
 
         // Assert
         Assert.False(result?.IsSuccess);
