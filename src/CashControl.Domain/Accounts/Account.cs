@@ -1,5 +1,5 @@
-using System.Transactions;
 using CashControl.Domain.Primitives;
+using CashControl.Domain.Transactions;
 using CashControl.Domain.ValueObjects;
 
 namespace CashControl.Domain.Accounts;

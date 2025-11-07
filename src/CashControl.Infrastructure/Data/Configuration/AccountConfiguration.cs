@@ -19,6 +19,11 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
                     value => AccountId.Create(value)
                 );
         
+        builder.HasMany(account => account.Transactions)
+            .WithOne()
+            .HasForeignKey(transaction => transaction.AccountId)
+            .IsRequired();
+
         builder.Property(account => account.CreatedAt)
             .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'")
             .IsRequired();

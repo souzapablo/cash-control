@@ -1,5 +1,6 @@
 using System.Reflection;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Transactions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CashControl.Infrastructure.Data;
@@ -10,6 +11,7 @@ public class CashControlDbContext : DbContext
         : base(options) { }
         
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

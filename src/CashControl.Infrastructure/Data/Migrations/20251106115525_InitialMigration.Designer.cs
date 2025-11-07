@@ -3,17 +3,20 @@ using System;
 using CashControl.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CashControl.Infrastructure.Migrations
+namespace CashControl.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CashControlDbContext))]
-    partial class CashControlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251106115525_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
