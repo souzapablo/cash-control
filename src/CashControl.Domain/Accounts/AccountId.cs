@@ -6,8 +6,10 @@ public class AccountId : EntityId<Guid>
 {
     protected AccountId() { }
 
-    public AccountId(Guid value) : base(value) { }
+    public AccountId(Guid value)
+        : base(value) { }
 
     public static AccountId Create(Guid value) => new(value);
+
     public static AccountId CreateNew() => new(Guid.NewGuid());
 }

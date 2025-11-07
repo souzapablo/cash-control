@@ -5,6 +5,6 @@ namespace CashControl.IntegrationTests.Extensions;
 
 public static class HttpResponseExtensions
 {
-    public static Result<TData>? ReadAsResultAsync<TData>(this HttpResponseMessage response) 
-        => response.Content.ReadFromJsonAsync<Result<TData>>().Result;
+    public static Result<TData>? ReadAsResultAsync<TData>(this HttpResponseMessage response) =>
+        response.Content.ReadFromJsonAsync<Result<TData>>().Result;
 }

@@ -37,7 +37,7 @@ public class DeleteTests : BaseIntegrationTest
         var deletedAccount = await GetAccountInDb(accountId);
 
         // Assert
-    
+
         Assert.False(deletedAccount?.IsActive);
     }
 
@@ -76,13 +76,12 @@ public class DeleteTests : BaseIntegrationTest
         await Context.SaveChangesAsync();
         return account.Id.Value;
     }
-    
+
     private async Task<Account?> GetAccountInDb(Guid? id)
     {
         AccountId accountId = new(id.GetValueOrDefault());
         Account? accountInDb = await Context
-            .Accounts
-            .AsNoTracking()
+            .Accounts.AsNoTracking()
             .IgnoreQueryFilters()
             .SingleOrDefaultAsync(a => a.Id == accountId);
         return accountInDb;

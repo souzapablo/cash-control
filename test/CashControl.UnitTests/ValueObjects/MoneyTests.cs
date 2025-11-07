@@ -17,7 +17,7 @@ public class MoneyTests
         Money money = Money.Create(value, currency);
 
         // Assert
-        Assert.Equal(value, money.Amount);
+        Assert.Equal(value, money.Value);
         Assert.Equal(currency, money.Currency);
     }
 
@@ -32,10 +32,9 @@ public class MoneyTests
         Money money = Money.Create(value, currency);
 
         // Assert
-        Assert.Equal(0m, money.Amount);
+        Assert.Equal(0m, money.Value);
         Assert.Equal(currency, money.Currency);
     }
-
 
     [Fact(DisplayName = "Add should sum two Money values with same currency")]
     public void Add_Should_SumTwoMoneyValues_When_SameCurrency()
@@ -52,7 +51,7 @@ public class MoneyTests
         Money result = money1.Add(money2);
 
         // Assert
-        Assert.Equal(value1 + value2, result.Amount);
+        Assert.Equal(value1 + value2, result.Value);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -67,8 +66,9 @@ public class MoneyTests
         Money money2 = Money.Create(value2, Currency.USD);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => money1.Add(money2)).Message
-            .Equals("Cannot add money with different currencies");
+        Assert
+            .Throws<InvalidOperationException>(() => money1.Add(money2))
+            .Message.Equals("Cannot add money with different currencies");
     }
 
     [Fact(DisplayName = "Subtract should subtract two Money values with same currency")]
@@ -86,7 +86,7 @@ public class MoneyTests
         Money result = money1.Subtract(money2);
 
         // Assert
-        Assert.Equal(value1 - value2, result.Amount);
+        Assert.Equal(value1 - value2, result.Value);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -101,8 +101,9 @@ public class MoneyTests
         Money money2 = Money.Create(value2, Currency.USD);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => money1.Subtract(money2)).Message
-            .Equals("Cannot subtract money with different currencies");
+        Assert
+            .Throws<InvalidOperationException>(() => money1.Subtract(money2))
+            .Message.Equals("Cannot subtract money with different currencies");
     }
 
     [Fact(DisplayName = "Multiply should create Money with correct value and currency")]
@@ -118,7 +119,7 @@ public class MoneyTests
         Money result = money.Multiply(3);
 
         // Assert
-        Assert.Equal(value * 3, result.Amount);
+        Assert.Equal(value * 3, result.Value);
         Assert.Equal(currency, result.Currency);
     }
 
@@ -135,11 +136,13 @@ public class MoneyTests
         Money result = money.Negate();
 
         // Assert
-        Assert.Equal(-value, result.Amount);
+        Assert.Equal(-value, result.Value);
         Assert.Equal(currency, result.Currency);
     }
 
-    [Fact(DisplayName = "IsGreaterThan should return true for greater Money values with same currency")]
+    [Fact(
+        DisplayName = "IsGreaterThan should return true for greater Money values with same currency"
+    )]
     public void IsGreaterThan_Should_ReturnTrue_When_GreaterValueAndSameCurrency()
     {
         // Arrange
@@ -157,7 +160,9 @@ public class MoneyTests
         Assert.True(result);
     }
 
-    [Fact(DisplayName = "IsGreaterThan should return false for lesser Money values with same currency")]
+    [Fact(
+        DisplayName = "IsGreaterThan should return false for lesser Money values with same currency"
+    )]
     public void IsGreaterThan_Should_ReturnFalse_When_LesserValueAndSameCurrency()
     {
         // Arrange
@@ -186,8 +191,9 @@ public class MoneyTests
         Money money2 = Money.Create(value2, Currency.USD);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => money1.IsGreaterThan(money2)).Message
-            .Equals("Cannot compare money with different currencies");
+        Assert
+            .Throws<InvalidOperationException>(() => money1.IsGreaterThan(money2))
+            .Message.Equals("Cannot compare money with different currencies");
     }
 
     [Fact(DisplayName = "IsLessThan should return true for lesser Money values with same currency")]
@@ -208,7 +214,9 @@ public class MoneyTests
         Assert.True(result);
     }
 
-    [Fact(DisplayName = "IsLessThan should return false for greater Money values with same currency")]
+    [Fact(
+        DisplayName = "IsLessThan should return false for greater Money values with same currency"
+    )]
     public void IsLessThan_Should_ReturnFalse_When_GreaterValueAndSameCurrency()
     {
         // Arrange
@@ -237,8 +245,9 @@ public class MoneyTests
         Money money2 = Money.Create(value2, Currency.USD);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => money1.IsLessThan(money2)).Message
-            .Equals("Cannot compare money with different currencies");
+        Assert
+            .Throws<InvalidOperationException>(() => money1.IsLessThan(money2))
+            .Message.Equals("Cannot compare money with different currencies");
     }
 
     [Fact(DisplayName = "Equals should return true for equal Money values with same currency")]
@@ -259,10 +268,15 @@ public class MoneyTests
         Assert.True(result);
     }
 
-    [Theory(DisplayName = "Equals should return false for greather or lesser Money values with same currency")]
+    [Theory(
+        DisplayName = "Equals should return false for greather or lesser Money values with same currency"
+    )]
     [InlineData(39.999999, 40.00)]
     [InlineData(40.00, 39.999999)]
-    public void IsEqualTo_Should_ReturnFalse_When_GreaterOrLesserValueAndSameCurrency(decimal value1, decimal value2)
+    public void IsEqualTo_Should_ReturnFalse_When_GreaterOrLesserValueAndSameCurrency(
+        decimal value1,
+        decimal value2
+    )
     {
         // Arrange
         Currency currency = Currency.BRL;
@@ -288,7 +302,8 @@ public class MoneyTests
         Money money2 = Money.Create(value2, Currency.USD);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => money1.IsEqualTo(money2)).Message
-            .Equals("Cannot compare money with different currencies");
+        Assert
+            .Throws<InvalidOperationException>(() => money1.IsEqualTo(money2))
+            .Message.Equals("Cannot compare money with different currencies");
     }
 }

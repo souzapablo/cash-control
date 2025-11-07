@@ -14,22 +14,24 @@ public class Delete
 
     public class DeleteAccountEndpoint : IEndpoint
     {
-        public static void Map(IEndpointRouteBuilder app)
-            => app.MapDelete("/{id:guid}", HandleAsync)
+        public static void Map(IEndpointRouteBuilder app) =>
+            app.MapDelete("/{id:guid}", HandleAsync)
                 .WithName("Accounts: Delete")
                 .WithSummary("Deletes an account")
                 .WithDescription("Deletes an account by its ID.");
-    
+
         private static async Task<Results<NoContent, NotFound<Result>>> HandleAsync(
             [FromRoute] Guid id,
             CashControlDbContext context,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken
+        )
         {
             AccountId accountId = AccountId.Create(id);
 
-            Account? account = await context
-                .Accounts
-                .SingleOrDefaultAsync(a => a.Id == accountId, cancellationToken);
+            Account? account = await context.Accounts.SingleOrDefaultAsync(
+                a => a.Id == accountId,
+                cancellationToken
+            );
 
             if (account is null)
             {

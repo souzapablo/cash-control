@@ -11,11 +11,10 @@ public static class Endpoint
     {
         var endpoints = app.MapGroup("api");
 
-        endpoints.MapGroup("/")
-            .WithTags("Health Check")
-            .MapGet("/", () => new { message = "OK" });
-        
-        endpoints.MapGroup("/accounts")
+        endpoints.MapGroup("/").WithTags("Health Check").MapGet("/", () => new { message = "OK" });
+
+        endpoints
+            .MapGroup("/accounts")
             .WithTags("Accounts")
             .MapEndpoint<CreateAccountEndpoint>()
             .MapEndpoint<GetAccountByIdEndpoint>()

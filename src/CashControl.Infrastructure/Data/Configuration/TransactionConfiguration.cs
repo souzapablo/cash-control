@@ -13,45 +13,42 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 
         builder.HasQueryFilter(transaction => transaction.IsActive);
 
-        builder.Property(transaction => transaction.Id)
-            .HasConversion(
-                    id => id.Value,
-                    value => TransactionId.Create(value)
-                );
-        
-        builder.Property(account => account.CreatedAt)
+        builder
+            .Property(transaction => transaction.Id)
+            .HasConversion(id => id.Value, value => TransactionId.Create(value));
+
+        builder
+            .Property(account => account.CreatedAt)
             .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'")
             .IsRequired();
 
-        builder.Property(transaction => transaction.LastUpdate)
-            .IsRequired(false);
+        builder.Property(transaction => transaction.LastUpdate).IsRequired(false);
 
-        builder.Property(transaction => transaction.IsActive)
-            .HasDefaultValue(true)
-            .IsRequired();
+        builder.Property(transaction => transaction.IsActive).HasDefaultValue(true).IsRequired();
 
-        builder.OwnsOne(transaction => transaction.Amount, balanceBuilder =>
-        {
-            balanceBuilder.Property(money => money.Amount)
-                .HasColumnName("amount")
-                .HasPrecision(18, 4)
-                .HasDefaultValue(0m)
-                .IsRequired();
-            
-            balanceBuilder.Property(money => money.Currency)
-                .HasColumnName("currency")
-                .HasDefaultValue(Currency.BRL)
-                .IsRequired();
-        });
+        builder.OwnsOne(
+            transaction => transaction.Amount,
+            balanceBuilder =>
+            {
+                balanceBuilder
+                    .Property(money => money.Value)
+                    .HasColumnName("amount")
+                    .HasPrecision(18, 4)
+                    .HasDefaultValue(0m)
+                    .IsRequired();
 
-        builder.Property(account => account.Description)
-            .IsRequired()
-            .HasMaxLength(200);
+                balanceBuilder
+                    .Property(money => money.Currency)
+                    .HasColumnName("currency")
+                    .HasDefaultValue(Currency.BRL)
+                    .IsRequired();
+            }
+        );
 
-        builder.Property(transaction => transaction.Date)
-            .IsRequired();
-        
-        builder.Property(transaction => transaction.Type)
-            .IsRequired();  
+        builder.Property(account => account.Description).IsRequired().HasMaxLength(200);
+
+        builder.Property(transaction => transaction.Date).IsRequired();
+
+        builder.Property(transaction => transaction.Type).IsRequired();
     }
 }

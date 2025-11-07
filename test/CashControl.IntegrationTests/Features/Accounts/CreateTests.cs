@@ -74,7 +74,7 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
@@ -93,7 +93,7 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
@@ -112,7 +112,7 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Account? accountInDb = await GetAccountInDb(result?.Value.Id);
 
@@ -133,8 +133,12 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
-        Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be a string with a maximum length of '200'."),
-            result?.Error);
+        Assert.Equal(
+            Domain.Primitives.Error.ValidationError(
+                "The field Name must be a string with a maximum length of '200'."
+            ),
+            result?.Error
+        );
     }
 
     [Fact(DisplayName = "Should return 400 Bad Request when name is null")]
@@ -149,10 +153,12 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
-        Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be informed."),
-            result?.Error);
+        Assert.Equal(
+            Domain.Primitives.Error.ValidationError("The field Name must be informed."),
+            result?.Error
+        );
     }
-    
+
     [Fact(DisplayName = "Should return 400 Bad Request when name is empty string")]
     public async Task Should_ReturnBadRequest_When_NameIsEmpty()
     {
@@ -165,10 +171,12 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         var result = response.ReadAsResultAsync<CreateAccountResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
-        Assert.Equal(Domain.Primitives.Error.ValidationError("The field Name must be informed."),
-            result?.Error);
+        Assert.Equal(
+            Domain.Primitives.Error.ValidationError("The field Name must be informed."),
+            result?.Error
+        );
     }
-    
+
     private async Task<Account?> GetAccountInDb(Guid? id)
     {
         AccountId accountId = new(id.GetValueOrDefault());

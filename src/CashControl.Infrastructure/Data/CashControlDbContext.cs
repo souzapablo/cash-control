@@ -9,7 +9,7 @@ public class CashControlDbContext : DbContext
 {
     public CashControlDbContext(DbContextOptions<CashControlDbContext> options)
         : base(options) { }
-        
+
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
 

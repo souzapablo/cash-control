@@ -9,7 +9,7 @@ public abstract class Entity<TId>
     {
         Id = id;
     }
-    
+
     public TId Id { get; protected set; } = default!;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime? LastUpdate { get; private set; }

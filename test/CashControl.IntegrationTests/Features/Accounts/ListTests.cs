@@ -46,14 +46,13 @@ public class ListTests : BaseIntegrationTest
         Account activeAccount1 = await CreateAccountInDb("Active Account 1");
         Account activeAccount2 = await CreateAccountInDb("Active Account 2");
         Account deletedAccount = await CreateAccountInDb("Deleted Account");
-        
+
         await Client.DeleteAsync($"/api/accounts/{deletedAccount.Id.Value}");
 
         // Act
         var response = await Client.GetAsync("/api/accounts");
         var result = response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
 
-        
         var accounts = result?.Value.ToList();
         Assert.Equal(2, accounts?.Count);
         Assert.Contains(accounts!, a => a.Id == activeAccount1.Id.Value);
@@ -75,14 +74,14 @@ public class ListTests : BaseIntegrationTest
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.True(result?.IsSuccess);
         Assert.NotNull(result?.Value);
-        
+
         var accounts = result.Value.ToList();
         var returnedAccount = accounts.FirstOrDefault(a => a.Id == account.Id.Value);
-        
+
         Assert.NotNull(returnedAccount);
         Assert.Equal(account.Id.Value, returnedAccount.Id);
         Assert.Equal(account.Name, returnedAccount.Name);
-        Assert.Equal(account.Balance.Amount, returnedAccount.Balance.Amount);
+        Assert.Equal(account.Balance.Value, returnedAccount.Balance.Amount);
         Assert.Equal(account.Balance.Currency.ToString(), returnedAccount.Balance.Currency);
     }
 
@@ -94,4 +93,3 @@ public class ListTests : BaseIntegrationTest
         return account;
     }
 }
-

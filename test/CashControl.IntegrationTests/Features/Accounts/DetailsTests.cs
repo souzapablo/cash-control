@@ -37,7 +37,7 @@ public class DetailsTests : BaseIntegrationTest
         var result = response.ReadAsResultAsync<AccountDetailsResponse>();
 
         // Assert
-        Assert.Equal(account.Balance.Amount, result?.Value?.Balance.Amount);
+        Assert.Equal(account.Balance.Value, result?.Value?.Balance.Amount);
         Assert.Equal(account.Balance.Currency.ToString(), result?.Value?.Balance.Currency);
         Assert.Equal(account.Name, result?.Value?.Name);
         Assert.Equal(account.Id.Value, result?.Value?.Id);
@@ -75,7 +75,7 @@ public class DetailsTests : BaseIntegrationTest
     private async Task<Account> CreateAccountInDb(string name)
     {
         Account account = Account.Create(name);
-        Context.Accounts.Add(account);  
+        Context.Accounts.Add(account);
         await Context.SaveChangesAsync();
         return account;
     }

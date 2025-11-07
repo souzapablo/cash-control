@@ -22,20 +22,23 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         builder.ConfigureTestServices(services =>
         {
-            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<CashControlDbContext>));
+            var descriptor = services.SingleOrDefault(d =>
+                d.ServiceType == typeof(DbContextOptions<CashControlDbContext>)
+            );
 
             if (descriptor != null)
                 services.Remove(descriptor);
-                
+
             services.AddDbContext<CashControlDbContext>(options =>
             {
-                options.UseNpgsql(_dbContainer.GetConnectionString())
+                options
+                    .UseNpgsql(_dbContainer.GetConnectionString())
                     .UseSnakeCaseNamingConvention();
             });
         });
     }
 
     public new Task DisposeAsync() => _dbContainer.StopAsync();
-    
+
     public Task InitializeAsync() => _dbContainer.StartAsync();
 }

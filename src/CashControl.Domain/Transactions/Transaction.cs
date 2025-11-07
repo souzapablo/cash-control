@@ -8,12 +8,13 @@ public class Transaction : Entity<TransactionId>
 {
     protected Transaction() { }
 
-    private Transaction(        
+    private Transaction(
         AccountId accountId,
         string description,
         Money amount,
         TransactionType type,
-        DateTime date)
+        DateTime date
+    )
     {
         Id = TransactionId.CreateNew();
         AccountId = accountId;
@@ -34,6 +35,6 @@ public class Transaction : Entity<TransactionId>
         string description,
         Money amount,
         TransactionType type,
-        DateTime date) 
-            => new(accountId, description, amount, type, date);
+        DateTime date
+    ) => new(accountId, description, amount, type, date);
 }
