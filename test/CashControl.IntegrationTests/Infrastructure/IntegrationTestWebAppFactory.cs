@@ -1,4 +1,5 @@
 using CashControl.Infrastructure.Data;
+using CashControl.IntegrationTests.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -40,5 +41,16 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     public new Task DisposeAsync() => _dbContainer.StopAsync();
 
-    public Task InitializeAsync() => _dbContainer.StartAsync();
+    public async Task InitializeAsync()
+    {
+        await _dbContainer.StartAsync();
+        using var scope = Services.CreateScope();
+
+        var dbContext = scope.ServiceProvider.GetRequiredService<CashControlDbContext>();
+
+        if (dbContext.Database.GetPendingMigrations().Any())
+            dbContext.Database.Migrate();
+
+        await dbContext.SeedDataAsync();
+    }
 }

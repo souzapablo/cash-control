@@ -16,7 +16,5 @@ public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
         _scope = factory.Services.CreateScope();
         Context = _scope.ServiceProvider.GetRequiredService<CashControlDbContext>();
         Client = factory.CreateClient();
-        if (Context.Database.GetPendingMigrations().Any())
-            Context.Database.Migrate();
     }
 }

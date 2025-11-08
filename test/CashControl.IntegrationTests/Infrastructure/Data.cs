@@ -1,0 +1,20 @@
+using CashControl.Domain.Accounts;
+using CashControl.Domain.Categories;
+using CashControl.Domain.Enums;
+using CashControl.Domain.Transactions;
+using CashControl.Domain.ValueObjects;
+
+namespace CashControl.IntegrationTests.Infrastructure;
+
+public class Data
+{
+    public static readonly Account DefaultAccount = Account.Create("Default Account", Currency.BRL);
+    public static readonly Category DefaultCategory = Category.Create("Default");
+    public static readonly Transaction DefaultTransaction = Transaction.Create(
+        DefaultCategory.Id,
+        "Default Transaction",
+        Money.Create(100, Currency.BRL),
+        TransactionType.Income,
+        DateTime.UtcNow
+    );
+}
