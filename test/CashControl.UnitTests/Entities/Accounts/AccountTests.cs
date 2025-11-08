@@ -1,4 +1,3 @@
-using System;
 using CashControl.Domain.Accounts;
 using CashControl.Domain.Enums;
 using Xunit;

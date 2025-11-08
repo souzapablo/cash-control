@@ -45,6 +45,7 @@ public class Details
                     a.Transactions.Select(t => new TransactionsResponse(
                         t.Id,
                         t.Description,
+                        t.Category.Name,
                         new MoneyResponse(t.Amount.Value, t.Amount.Currency.ToString()),
                         t.Type.ToString(),
                         t.Date

@@ -1,4 +1,5 @@
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Categories;
 using CashControl.Domain.Primitives;
 using CashControl.Domain.ValueObjects;
 
@@ -8,9 +9,16 @@ public class Transaction : Entity<TransactionId>
 {
     protected Transaction() { }
 
-    private Transaction(string description, Money amount, TransactionType type, DateTime date)
+    private Transaction(
+        CategoryId categoryId,
+        string description,
+        Money amount,
+        TransactionType type,
+        DateTime date
+    )
     {
         Id = TransactionId.CreateNew();
+        CategoryId = categoryId;
         Description = description;
         Amount = amount;
         Type = type;
@@ -18,15 +26,18 @@ public class Transaction : Entity<TransactionId>
     }
 
     public AccountId AccountId { get; private set; } = default!;
+    public CategoryId CategoryId { get; private set; } = default!;
+    public Category Category { get; private set; } = null!;
     public string Description { get; private set; } = string.Empty;
     public Money Amount { get; private set; } = Money.Zero();
     public TransactionType Type { get; private set; }
     public DateTime Date { get; private set; }
 
     public static Transaction Create(
+        CategoryId categoryId,
         string description,
         Money amount,
         TransactionType type,
         DateTime date
-    ) => new(description, amount, type, date);
+    ) => new(categoryId, description, amount, type, date);
 }

@@ -1,5 +1,6 @@
 using CashControl.Api.Abstractions;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Categories;
 using CashControl.Domain.Enums;
 using CashControl.Domain.Errors;
 using CashControl.Domain.Primitives;
@@ -15,6 +16,7 @@ namespace CashControl.Api.Feature.Accounts;
 public class CreateTransaction
 {
     public record Command(
+        Guid CategoryId,
         string Description,
         decimal Amount,
         Currency Currency,
@@ -65,7 +67,19 @@ public class CreateTransaction
                 Result failureResult = Result.Failure(TransactionErrors.CurrencyMismatch);
                 return TypedResults.BadRequest(failureResult);
             }
+            CategoryId categoryId = CategoryId.Create(command.CategoryId);
+            bool categoryExists = await context.Categories.AnyAsync(
+                category => category.Id == categoryId,
+                cancellationToken
+            );
+
+            if (!categoryExists)
+            {
+                var failureResult = Result.Failure(CategoryErrors.NotFound(command.CategoryId));
+                return TypedResults.BadRequest(failureResult);
+            }
             Transaction transaction = Transaction.Create(
+                categoryId,
                 command.Description,
                 Money.Create(command.Amount, command.Currency),
                 command.Type,

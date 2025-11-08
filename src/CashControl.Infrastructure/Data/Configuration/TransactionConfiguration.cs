@@ -50,5 +50,11 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(transaction => transaction.Date).IsRequired();
 
         builder.Property(transaction => transaction.Type).IsRequired();
+
+        builder
+            .HasOne(transaction => transaction.Category)
+            .WithMany()
+            .HasForeignKey(transaction => transaction.CategoryId)
+            .IsRequired();
     }
 }

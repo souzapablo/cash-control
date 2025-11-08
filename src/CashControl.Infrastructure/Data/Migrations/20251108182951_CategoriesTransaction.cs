@@ -1,37 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace CashControl.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialTransactionsMigration : Migration
+    public partial class CategoriesTransaction : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<Guid>(
+                name: "category_id",
+                table: "transactions",
+                type: "uuid",
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000")
+            );
+
             migrationBuilder.CreateTable(
-                name: "transactions",
+                name: "categories",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    account_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    description = table.Column<string>(
+                    name = table.Column<string>(
                         type: "character varying(200)",
                         maxLength: 200,
-                        nullable: false
-                    ),
-                    amount = table.Column<decimal>(
-                        type: "numeric(18,4)",
-                        precision: 18,
-                        scale: 4,
-                        nullable: false,
-                        defaultValue: 0m
-                    ),
-                    currency = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    date = table.Column<DateTime>(
-                        type: "timestamp with time zone",
                         nullable: false
                     ),
                     created_at = table.Column<DateTime>(
@@ -51,28 +46,39 @@ namespace CashControl.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_transactions", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_transactions_accounts_account_id",
-                        column: x => x.account_id,
-                        principalTable: "accounts",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade
-                    );
+                    table.PrimaryKey("pk_categories", x => x.id);
                 }
             );
 
             migrationBuilder.CreateIndex(
-                name: "ix_transactions_account_id",
+                name: "ix_transactions_category_id",
                 table: "transactions",
-                column: "account_id"
+                column: "category_id"
+            );
+
+            migrationBuilder.AddForeignKey(
+                name: "fk_transactions_categories_category_id",
+                table: "transactions",
+                column: "category_id",
+                principalTable: "categories",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade
             );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "transactions");
+            migrationBuilder.DropForeignKey(
+                name: "fk_transactions_categories_category_id",
+                table: "transactions"
+            );
+
+            migrationBuilder.DropTable(name: "categories");
+
+            migrationBuilder.DropIndex(name: "ix_transactions_category_id", table: "transactions");
+
+            migrationBuilder.DropColumn(name: "category_id", table: "transactions");
         }
     }
 }

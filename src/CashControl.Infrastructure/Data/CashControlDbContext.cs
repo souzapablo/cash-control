@@ -1,5 +1,6 @@
 using System.Reflection;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Categories;
 using CashControl.Domain.Transactions;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public class CashControlDbContext : DbContext
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

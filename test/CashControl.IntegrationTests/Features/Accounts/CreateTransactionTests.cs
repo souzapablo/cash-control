@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Categories;
 using CashControl.Domain.Enums;
 using CashControl.Domain.Errors;
 using CashControl.Domain.Transactions;
@@ -22,7 +23,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Test Transaction",
             100.50m,
             Currency.BRL,
@@ -47,7 +50,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Transaction with Location Header",
             50.25m,
             Currency.BRL,
@@ -75,11 +80,19 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var description = "Persisted Transaction";
         var amount = 75.99m;
         var currency = Currency.BRL;
         var date = DateTime.UtcNow;
-        Command command = new(description, amount, currency, date, TransactionType.Income);
+        Command command = new(
+            category.Id.Value,
+            description,
+            amount,
+            currency,
+            date,
+            TransactionType.Income
+        );
 
         // Act
         HttpResponseMessage response = await Client.PostAsJsonAsync(
@@ -105,9 +118,11 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var initialBalance = account.Balance.Value;
         var transactionAmount = 150.75m;
         Command command = new(
+            category.Id.Value,
             "Income Transaction",
             transactionAmount,
             Currency.BRL,
@@ -129,8 +144,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account? account = await CreateAccountInDb("Test Account");
-        // First add some income to have a positive balance
+        Category category = await CreateCategoryInDb("Test Category");
         var incomeCommand = new Command(
+            category.Id.Value,
             "Initial Income",
             200m,
             Currency.BRL,
@@ -142,12 +158,12 @@ public class CreateTransactionTests : BaseIntegrationTest
             incomeCommand
         );
 
-        // Refresh account to get updated balance
         account = await GetAccountInDb(account.Id.Value)!;
         var balanceBeforeExpense = account?.Balance.Value;
         var expenseAmount = 50.25m;
 
         var expenseCommand = new Command(
+            category.Id.Value,
             "Expense Transaction",
             expenseAmount,
             Currency.BRL,
@@ -174,13 +190,49 @@ public class CreateTransactionTests : BaseIntegrationTest
         Account account = await CreateAccountInDb("Test Account");
         var initialBalance = account.Balance.Value;
 
+        Category category = await CreateCategoryInDb("Test Category");
         var transactions = new[]
         {
-            new Command("Income 1", 100m, Currency.BRL, DateTime.UtcNow, TransactionType.Income),
-            new Command("Income 2", 50m, Currency.BRL, DateTime.UtcNow, TransactionType.Income),
-            new Command("Expense 1", 30m, Currency.BRL, DateTime.UtcNow, TransactionType.Expense),
-            new Command("Income 3", 25m, Currency.BRL, DateTime.UtcNow, TransactionType.Income),
-            new Command("Expense 2", 15m, Currency.BRL, DateTime.UtcNow, TransactionType.Expense),
+            new Command(
+                category.Id.Value,
+                "Income 1",
+                100m,
+                Currency.BRL,
+                DateTime.UtcNow,
+                TransactionType.Income
+            ),
+            new Command(
+                category.Id.Value,
+                "Income 2",
+                50m,
+                Currency.BRL,
+                DateTime.UtcNow,
+                TransactionType.Income
+            ),
+            new Command(
+                category.Id.Value,
+                "Expense 1",
+                30m,
+                Currency.BRL,
+                DateTime.UtcNow,
+                TransactionType.Expense
+            ),
+            new Command(
+                category.Id.Value,
+                "Income 3",
+                25m,
+                Currency.BRL,
+                DateTime.UtcNow,
+                TransactionType.Income
+            ),
+            new Command(
+                category.Id.Value,
+                "Expense 2",
+                15m,
+                Currency.BRL,
+                DateTime.UtcNow,
+                TransactionType.Expense
+            ),
         };
 
         // Act
@@ -205,7 +257,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Guid nonExistentAccountId = Guid.NewGuid();
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Test Transaction",
             100m,
             Currency.BRL,
@@ -228,7 +282,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Guid nonExistentAccountId = Guid.NewGuid();
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Test Transaction",
             100m,
             Currency.BRL,
@@ -255,7 +311,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Zero Amount Transaction",
             0m,
             Currency.BRL,
@@ -283,7 +341,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Negative Amount Transaction",
             -50m,
             Currency.BRL,
@@ -311,8 +371,10 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var largeAmount = 999999999.9999m;
         Command command = new(
+            category.Id.Value,
             "Large Amount Transaction",
             largeAmount,
             Currency.BRL,
@@ -339,7 +401,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var usdCommand = new Command(
+            category.Id.Value,
             "USD Transaction",
             100m,
             Currency.USD,
@@ -368,8 +432,10 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var maxLengthDescription = new string('A', 200);
         Command command = new(
+            category.Id.Value,
             maxLengthDescription,
             100m,
             Currency.BRL,
@@ -397,7 +463,9 @@ public class CreateTransactionTests : BaseIntegrationTest
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
         var description = "Transaction #1 - $pecial & Symbols! @2024";
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             description,
             100m,
             Currency.BRL,
@@ -425,7 +493,9 @@ public class CreateTransactionTests : BaseIntegrationTest
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
         var description = "Transação Teste - 测试交易 - Тестова транзакція";
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             description,
             100m,
             Currency.BRL,
@@ -453,7 +523,9 @@ public class CreateTransactionTests : BaseIntegrationTest
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
         var pastDate = DateTime.UtcNow.AddDays(-30);
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             "Past Transaction",
             100m,
             Currency.BRL,
@@ -480,8 +552,10 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var futureDate = DateTime.UtcNow.AddDays(30);
         Command command = new(
+            category.Id.Value,
             "Future Transaction",
             100m,
             Currency.BRL,
@@ -508,7 +582,15 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
-        Command command = new(null!, 100m, Currency.BRL, DateTime.UtcNow, TransactionType.Income);
+        Category category = await CreateCategoryInDb("Test Category");
+        Command command = new(
+            category.Id.Value,
+            null!,
+            100m,
+            Currency.BRL,
+            DateTime.UtcNow,
+            TransactionType.Income
+        );
 
         // Act
         HttpResponseMessage response = await Client.PostAsJsonAsync(
@@ -530,7 +612,9 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         Command command = new(
+            category.Id.Value,
             string.Empty,
             100m,
             Currency.BRL,
@@ -558,8 +642,10 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
+        Category category = await CreateCategoryInDb("Test Category");
         var tooLongDescription = new string('A', 201);
         Command command = new(
+            category.Id.Value,
             tooLongDescription,
             100m,
             Currency.BRL,
@@ -646,6 +732,32 @@ public class CreateTransactionTests : BaseIntegrationTest
         );
     }
 
+    [Fact(DisplayName = "Should return 400 Bad Request when category does not exist")]
+    public async Task Should_ReturnBadRequest_When_CategoryDoesNotExist()
+    {
+        // Arrange
+        Account account = await CreateAccountInDb("Test Account");
+        Command command = new(
+            Guid.NewGuid(),
+            "Category does not exist",
+            100m,
+            Currency.BRL,
+            DateTime.UtcNow,
+            TransactionType.Income
+        );
+
+        // Act
+        HttpResponseMessage response = await Client.PostAsJsonAsync(
+            $"/api/accounts/{account.Id.Value}/transactions",
+            command
+        );
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var result = response.ReadAsResultAsync<Response>();
+        Assert.Equal(CategoryErrors.NotFound(command.CategoryId), result?.Error);
+    }
+
     private async Task<Account> CreateAccountInDb(string name)
     {
         Account account = Account.Create(name);
@@ -674,5 +786,13 @@ public class CreateTransactionTests : BaseIntegrationTest
             t.Id == transactionId
         );
         return transaction;
+    }
+
+    private async Task<Category> CreateCategoryInDb(string name)
+    {
+        Category category = Category.Create(name);
+        Context.Categories.Add(category);
+        await Context.SaveChangesAsync();
+        return category;
     }
 }
