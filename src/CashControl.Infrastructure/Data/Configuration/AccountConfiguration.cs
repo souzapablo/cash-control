@@ -32,6 +32,12 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.Property(account => account.IsActive).HasDefaultValue(true).IsRequired();
 
+        builder
+            .Property(account => account.Currency)
+            .HasColumnName("currency")
+            .HasDefaultValue(Currency.BRL)
+            .IsRequired();
+
         builder.OwnsOne(
             account => account.Balance,
             balanceBuilder =>

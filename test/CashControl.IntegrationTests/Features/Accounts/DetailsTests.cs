@@ -1,6 +1,6 @@
 using System.Net;
-using CashControl.Api.Feature.Accounts;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Errors;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models.Accounts;
@@ -69,7 +69,7 @@ public class DetailsTests : BaseIntegrationTest
         // Assert
         Assert.False(result?.IsSuccess);
         Assert.NotNull(result?.Error);
-        Assert.Equal(result.Error, Errors.AccountNotFound(accountId));
+        Assert.Equal(result.Error, AccountErrors.AccountNotFound(accountId));
     }
 
     private async Task<Account> CreateAccountInDb(string name)

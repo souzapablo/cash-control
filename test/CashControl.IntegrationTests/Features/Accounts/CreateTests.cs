@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Enums;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models.Accounts;
@@ -173,6 +174,60 @@ public class CreateTests : BaseIntegrationTest
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Name must be informed."),
+            result?.Error
+        );
+    }
+
+    [Fact(DisplayName = "Should create account with default currency BRL when currency is not provided")]
+    public async Task Should_CreateAccount_WithDefaultCurrencyBRL_When_CurrencyNotProvided()
+    {
+        // Arrange
+        Command command = new("Account with Default Currency");
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/accounts", command);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+
+        Assert.NotNull(accountInDb);
+        Assert.Equal(Currency.BRL, accountInDb.Currency);
+    }
+
+    [Fact(DisplayName = "Should create account with USD currency when specified")]
+    public async Task Should_CreateAccount_WithUSDCurrency_When_Specified()
+    {
+        // Arrange
+        Command command = new("USD Account", Currency.USD);
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/accounts", command);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+
+        Assert.NotNull(accountInDb);
+        Assert.Equal(Currency.USD, accountInDb.Currency);
+    }
+
+    [Fact(DisplayName = "Should return 400 Bad Request when currency is invalid enum value")]
+    public async Task Should_ReturnBadRequest_When_CurrencyIsInvalidEnumValue()
+    {
+        // Arrange
+        var invalidCommand = new { Name = "Test Account", Currency = 999 };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/accounts", invalidCommand);
+
+        // Assert
+        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
+        Assert.Equal(
+            Domain.Primitives.Error.ValidationError("The field Currency must be a valid currency."),
             result?.Error
         );
     }

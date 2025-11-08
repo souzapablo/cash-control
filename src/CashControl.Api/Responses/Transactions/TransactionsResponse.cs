@@ -7,6 +7,6 @@ public record TransactionsResponse(
     Guid Id,
     string Description,
     MoneyResponse Amount,
-    TransactionType Type,
+    string Type,
     DateTime Date
 );

@@ -1,5 +1,6 @@
 using CashControl.Api.Abstractions;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Errors;
 using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -35,7 +36,7 @@ public class Delete
 
             if (account is null)
             {
-                Result failureResult = Result.Failure(Errors.AccountNotFound(id));
+                Result failureResult = Result.Failure(AccountErrors.AccountNotFound(id));
                 return TypedResults.NotFound(failureResult);
             }
 

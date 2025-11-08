@@ -1,4 +1,5 @@
 using static CashControl.Api.Feature.Accounts.Create;
+using static CashControl.Api.Feature.Accounts.CreateTransaction;
 using static CashControl.Api.Feature.Accounts.Delete;
 using static CashControl.Api.Feature.Accounts.Details;
 using static CashControl.Api.Feature.Accounts.List;
@@ -19,7 +20,8 @@ public static class Endpoint
             .MapEndpoint<CreateAccountEndpoint>()
             .MapEndpoint<GetAccountByIdEndpoint>()
             .MapEndpoint<DeleteAccountEndpoint>()
-            .MapEndpoint<ListAccountsEndpoint>();
+            .MapEndpoint<ListAccountsEndpoint>()
+            .MapEndpoint<CreateTransactionEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

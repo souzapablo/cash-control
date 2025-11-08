@@ -1,5 +1,6 @@
 using CashControl.Api.Abstractions;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Enums;
 using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,7 +9,7 @@ namespace CashControl.Api.Feature.Accounts;
 
 public class Create
 {
-    public record Command(string Name);
+    public record Command(string Name, Currency Currency = Currency.BRL);
 
     public record Response(Guid Id);
 
@@ -38,7 +39,7 @@ public class Create
                 return TypedResults.BadRequest(failureResult);
             }
 
-            Account account = Account.Create(command.Name);
+            Account account = Account.Create(command.Name, command.Currency);
 
             context.Accounts.Add(account);
             await context.SaveChangesAsync(cancellationToken);
@@ -57,6 +58,9 @@ public class Create
                 return Error.ValidationError(
                     "The field Name must be a string with a maximum length of '200'."
                 );
+
+            if (!Enum.IsDefined(typeof(Currency), command.Currency))
+                return Error.ValidationError("The field Currency must be a valid currency.");
 
             return null;
         }

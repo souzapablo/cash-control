@@ -2,6 +2,7 @@ using CashControl.Api.Abstractions;
 using CashControl.Api.Responses.Transactions;
 using CashControl.Api.Responses.ValueObjects;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Errors;
 using CashControl.Domain.Primitives;
 using CashControl.Infrastructure.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -45,7 +46,7 @@ public class Details
                         t.Id,
                         t.Description,
                         new MoneyResponse(t.Amount.Value, t.Amount.Currency.ToString()),
-                        t.Type,
+                        t.Type.ToString(),
                         t.Date
                     ))
                 ))
@@ -53,7 +54,7 @@ public class Details
 
             if (accountResponse is null)
             {
-                Result failureResult = Result.Failure(Errors.AccountNotFound(id));
+                Result failureResult = Result.Failure(AccountErrors.AccountNotFound(id));
                 return TypedResults.NotFound(failureResult);
             }
 

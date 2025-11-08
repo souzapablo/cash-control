@@ -1,6 +1,6 @@
 using System.Net;
-using CashControl.Api.Feature.Accounts;
 using CashControl.Domain.Accounts;
+using CashControl.Domain.Errors;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models;
@@ -66,7 +66,7 @@ public class DeleteTests : BaseIntegrationTest
         // Assert
         var result = response.ReadAsResultAsync<Result>();
         Assert.False(result?.IsSuccess);
-        Assert.Equal(Errors.AccountNotFound(accountId), result?.Error);
+        Assert.Equal(AccountErrors.AccountNotFound(accountId), result?.Error);
     }
 
     private async Task<Guid> CreateAccountInDb(string name)
