@@ -24,7 +24,8 @@ public class Account : Entity<AccountId>
     public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
     public Currency Currency { get; private set; }
 
-    public static Account Create(string name, Currency currency = Currency.BRL) => new(name, currency);
+    public static Account Create(string name, Currency currency = Currency.BRL) =>
+        new(name, currency);
 
     public void AddTransaction(Transaction transaction)
     {

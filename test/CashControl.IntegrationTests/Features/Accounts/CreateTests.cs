@@ -178,7 +178,9 @@ public class CreateTests : BaseIntegrationTest
         );
     }
 
-    [Fact(DisplayName = "Should create account with default currency BRL when currency is not provided")]
+    [Fact(
+        DisplayName = "Should create account with default currency BRL when currency is not provided"
+    )]
     public async Task Should_CreateAccount_WithDefaultCurrencyBRL_When_CurrencyNotProvided()
     {
         // Arrange
