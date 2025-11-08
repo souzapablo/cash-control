@@ -15,15 +15,14 @@ namespace CashControl.Infrastructure.Data.Migrations
                 table: "accounts",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "currency",
-                table: "accounts");
+            migrationBuilder.DropColumn(name: "currency", table: "accounts");
         }
     }
 }

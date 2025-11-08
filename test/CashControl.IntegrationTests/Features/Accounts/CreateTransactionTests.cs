@@ -508,13 +508,7 @@ public class CreateTransactionTests : BaseIntegrationTest
     {
         // Arrange
         Account account = await CreateAccountInDb("Test Account");
-        Command command = new(
-            null!,
-            100m,
-            Currency.BRL,
-            DateTime.UtcNow,
-            TransactionType.Income
-        );
+        Command command = new(null!, 100m, Currency.BRL, DateTime.UtcNow, TransactionType.Income);
 
         // Act
         HttpResponseMessage response = await Client.PostAsJsonAsync(
@@ -601,7 +595,7 @@ public class CreateTransactionTests : BaseIntegrationTest
             Amount = 100m,
             Currency = 999,
             Date = DateTime.UtcNow,
-            Type = TransactionType.Income
+            Type = TransactionType.Income,
         };
 
         // Act
@@ -619,7 +613,9 @@ public class CreateTransactionTests : BaseIntegrationTest
         );
     }
 
-    [Fact(DisplayName = "Should return 400 Bad Request when transaction type is invalid enum value")]
+    [Fact(
+        DisplayName = "Should return 400 Bad Request when transaction type is invalid enum value"
+    )]
     public async Task Should_ReturnBadRequest_When_TransactionTypeIsInvalidEnumValue()
     {
         // Arrange
@@ -630,7 +626,7 @@ public class CreateTransactionTests : BaseIntegrationTest
             Amount = 100m,
             Currency = Currency.BRL,
             Date = DateTime.UtcNow,
-            Type = 999
+            Type = 999,
         };
 
         // Act
