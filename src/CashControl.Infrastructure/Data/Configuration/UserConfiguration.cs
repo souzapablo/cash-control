@@ -27,18 +27,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.PasswordHash).IsRequired().HasMaxLength(100);
 
-        builder.OwnsOne(
-            user => user.Email,
-            emailBuilder =>
-            {
-                emailBuilder
-                    .Property(email => email.Address)
-                    .HasColumnName("email")
-                    .IsRequired()
-                    .HasMaxLength(254);
+        builder
+            .Property(user => user.Email)
+            .HasConversion(email => email.Address, value => Email.Create(value))
+            .IsRequired()
+            .HasMaxLength(255);
 
-                emailBuilder.HasIndex(email => email.Address).IsUnique();
-            }
-        );
+        builder.HasIndex(user => user.Email).IsUnique();
     }
 }

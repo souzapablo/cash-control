@@ -42,7 +42,7 @@ public partial class Create
 
             Email email = Email.Create(command.Email);
             bool emailInUse = await context.Users.AnyAsync(
-                u => u.Email.Address == email.Address,
+                u => u.Email == email,
                 cancellationToken
             );
             if (emailInUse)

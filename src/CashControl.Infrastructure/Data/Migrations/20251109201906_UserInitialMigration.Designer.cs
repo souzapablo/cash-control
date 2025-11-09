@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CashControl.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CashControlDbContext))]
-    [Migration("20251109155009_InitialUserMigration")]
-    partial class InitialUserMigration
+    [Migration("20251109201906_UserInitialMigration")]
+    partial class UserInitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,12 @@ namespace CashControl.Infrastructure.Data.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("email");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -185,6 +191,10 @@ namespace CashControl.Infrastructure.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_users");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
 
                     b.ToTable("users", (string)null);
                 });
@@ -271,37 +281,6 @@ namespace CashControl.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("CashControl.Domain.Users.User", b =>
-                {
-                    b.OwnsOne("CashControl.Domain.Users.Email", "Email", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("Address")
-                                .IsRequired()
-                                .HasMaxLength(254)
-                                .HasColumnType("character varying(254)")
-                                .HasColumnName("email");
-
-                            b1.HasKey("UserId");
-
-                            b1.HasIndex("Address")
-                                .IsUnique()
-                                .HasDatabaseName("ix_users_email");
-
-                            b1.ToTable("users");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId")
-                                .HasConstraintName("fk_users_users_id");
-                        });
-
-                    b.Navigation("Email")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CashControl.Domain.Accounts.Account", b =>

@@ -5,7 +5,7 @@
 namespace CashControl.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialUserMigration : Migration
+    public partial class UserInitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +16,8 @@ namespace CashControl.Infrastructure.Data.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     email = table.Column<string>(
-                        type: "character varying(254)",
-                        maxLength: 254,
+                        type: "character varying(255)",
+                        maxLength: 255,
                         nullable: false
                     ),
                     password_hash = table.Column<string>(
