@@ -4,6 +4,7 @@ using static CashControl.Api.Feature.Accounts.Delete;
 using static CashControl.Api.Feature.Accounts.Details;
 using static CashControl.Api.Feature.Accounts.List;
 using static CashControl.Api.Feature.Categories.Create;
+using static CashControl.Api.Feature.Users.Create;
 
 namespace CashControl.Api.Abstractions;
 
@@ -28,6 +29,8 @@ public static class Endpoint
             .MapGroup("/categories")
             .WithTags("Categories")
             .MapEndpoint<CreateCategoryEndpoint>();
+
+        endpoints.MapGroup("/users").WithTags("Users").MapEndpoint<CreateUserEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

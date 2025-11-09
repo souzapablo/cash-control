@@ -18,6 +18,10 @@ public static class DbContextExtensions
 
             context.Accounts.Add(Data.DefaultAccount);
         }
+
+        if (!context.Users.Any())
+            context.Users.Add(Data.DefaultUser);
+
         await context.SaveChangesAsync();
     }
 }

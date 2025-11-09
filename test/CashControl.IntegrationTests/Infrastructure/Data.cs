@@ -2,6 +2,7 @@ using CashControl.Domain.Accounts;
 using CashControl.Domain.Categories;
 using CashControl.Domain.Enums;
 using CashControl.Domain.Transactions;
+using CashControl.Domain.Users;
 using CashControl.Domain.ValueObjects;
 
 namespace CashControl.IntegrationTests.Infrastructure;
@@ -16,5 +17,9 @@ public class Data
         Money.Create(100, Currency.BRL),
         TransactionType.Income,
         DateTime.UtcNow
+    );
+    public static readonly User DefaultUser = User.Create(
+        Email.Create("defaultuser@example.com"),
+        "DefaultPassword123!"
     );
 }

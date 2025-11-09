@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace CashControl.Domain.Users;
 
-public partial record Email
+public partial record Email : IEquatable<Email>
 {
     private Email(string address)
     {
@@ -31,6 +31,12 @@ public partial record Email
     }
 
     public override string ToString() => Address;
+
+    bool IEquatable<Email>.Equals(Email? other) =>
+        other is not null
+        && string.Equals(Address, other.Address, StringComparison.OrdinalIgnoreCase);
+
+    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Address);
 
     [GeneratedRegex(
         @"^[a-zA-Z0-9_%+-]+(\.[a-zA-Z0-9_%+-]+)*@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$"
