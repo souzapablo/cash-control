@@ -64,7 +64,7 @@ public class CreateTransactionTests : BaseIntegrationTest
         // Assert
         Assert.NotNull(response.Headers.Location);
 
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         var location = response.Headers.Location.ToString();
         Assert.Contains(result!.Value.Id.ToString(), location);
         Assert.Contains($"accounts/{Data.DefaultAccount.Id.Value}/transactions", location);
@@ -94,8 +94,8 @@ public class CreateTransactionTests : BaseIntegrationTest
         );
 
         // Assert
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
 
         Assert.NotNull(transactionInDb);
         Assert.Equal(description, transactionInDb.Description);
@@ -131,7 +131,7 @@ public class CreateTransactionTests : BaseIntegrationTest
         );
 
         // Assert
-        Account? accountInDb = await GetAccountInDb(Data.DefaultAccount.Id.Value);
+        Account? accountInDb = await Context.GetAccountByIdAsync(Data.DefaultAccount.Id);
         Assert.NotNull(accountInDb);
         Assert.Equal(initialBalance + transactionAmount, accountInDb.Balance.Value);
     }
@@ -140,7 +140,7 @@ public class CreateTransactionTests : BaseIntegrationTest
     public async Task Should_UpdateAccountBalance_When_ExpenseTransactionIsCreated()
     {
         // Arrange
-        Account? account = await GetAccountInDb(Data.DefaultAccount.Id.Value)!;
+        Account? account = await Context.GetAccountByIdAsync(Data.DefaultAccount.Id);
         var balanceBeforeExpense = account?.Balance.Value;
 
         var expenseAmount = 50.25m;
@@ -162,7 +162,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         var expectedBalance = balanceBeforeExpense - expenseAmount;
-        Account? accountInDb = await GetAccountInDb(account!.Id.Value);
+        Account? accountInDb = await Context.GetAccountByIdAsync(account!.Id);
         Assert.NotNull(accountInDb);
         Assert.Equal(expectedBalance, accountInDb.Balance.Value);
     }
@@ -171,7 +171,7 @@ public class CreateTransactionTests : BaseIntegrationTest
     public async Task Should_AccumulateBalanceCorrectly_WithMultipleTransactions()
     {
         // Arrange
-        Account? account = await GetAccountInDb(Data.DefaultAccount.Id.Value);
+        Account? account = await Context.GetAccountByIdAsync(Data.DefaultAccount.Id);
         var initialBalance = account?.Balance.Value;
         var initialTransactionsCount = account?.Transactions.Count ?? 0;
 
@@ -229,7 +229,7 @@ public class CreateTransactionTests : BaseIntegrationTest
         }
 
         // Assert
-        Account? accountInDb = await GetAccountInDb(account!.Id.Value);
+        Account? accountInDb = await Context.GetAccountByIdAsync(account!.Id);
         Assert.NotNull(accountInDb);
         var expectedBalance = initialBalance + 100m + 50m - 30m + 25m - 15m;
         var expectedTransactionsCount = initialTransactionsCount + transactions.Length;
@@ -280,7 +280,7 @@ public class CreateTransactionTests : BaseIntegrationTest
             $"/api/accounts/{nonExistentAccountId}/transactions",
             command
         );
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
 
         // Assert
         Assert.False(result?.IsSuccess);
@@ -310,7 +310,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Amount must be greater than zero."),
             result?.Error
@@ -338,7 +338,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Amount must be greater than zero."),
             result?.Error
@@ -367,8 +367,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(largeAmount, transactionInDb.Amount.Value);
     }
@@ -395,7 +395,7 @@ public class CreateTransactionTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, usdResponse.StatusCode);
 
-        var usdResult = usdResponse.ReadAsResultAsync<Response>();
+        var usdResult = await usdResponse.ReadAsResultAsync<Response>();
 
         Assert.Equal(TransactionErrors.CurrencyMismatch, usdResult?.Error);
     }
@@ -424,8 +424,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(maxLengthDescription, transactionInDb.Description);
     }
@@ -452,8 +452,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(description, transactionInDb.Description);
     }
@@ -480,8 +480,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(description, transactionInDb.Description);
     }
@@ -508,8 +508,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(pastDate, transactionInDb.Date, TimeSpan.FromSeconds(1));
     }
@@ -536,8 +536,8 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
-        Transaction? transactionInDb = await GetTransactionInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Transaction? transactionInDb = await Context.GetTransactionByIdAsync(result?.Value.Id);
         Assert.NotNull(transactionInDb);
         Assert.Equal(futureDate, transactionInDb.Date, TimeSpan.FromSeconds(1));
     }
@@ -563,7 +563,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Description must be informed."),
             result?.Error
@@ -591,7 +591,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Description must be informed."),
             result?.Error
@@ -620,7 +620,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError(
                 "The field Description must be a string with a maximum length of '200'."
@@ -650,7 +650,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Currency must be a valid currency."),
             result?.Error
@@ -680,7 +680,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(
             Domain.Primitives.Error.ValidationError(
                 "The field Type must be a valid transaction type."
@@ -710,29 +710,7 @@ public class CreateTransactionTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var result = response.ReadAsResultAsync<Response>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.Equal(CategoryErrors.NotFound(command.CategoryId), result?.Error);
-    }
-
-    private async Task<Account?> GetAccountInDb(Guid id)
-    {
-        AccountId accountId = AccountId.Create(id);
-        Account? account = await Context
-            .Accounts.Include(a => a.Transactions)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == accountId);
-        return account;
-    }
-
-    private async Task<Transaction?> GetTransactionInDb(Guid? id)
-    {
-        if (id is null)
-            return null;
-
-        TransactionId transactionId = TransactionId.Create(id.Value);
-        Transaction? transaction = await Context.Transactions.FirstOrDefaultAsync(t =>
-            t.Id == transactionId
-        );
-        return transaction;
     }
 }

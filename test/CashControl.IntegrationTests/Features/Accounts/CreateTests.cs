@@ -4,7 +4,6 @@ using CashControl.Domain.Accounts;
 using CashControl.Domain.Enums;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
-using CashControl.IntegrationTests.Models.Accounts;
 using Xunit;
 using static CashControl.Api.Feature.Accounts.Create;
 
@@ -40,7 +39,7 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.NotNull(response.Headers.Location);
 
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        var result = await response.ReadAsResultAsync<Response>();
         var location = response.Headers.Location.ToString();
         Assert.Contains(result!.Value.Id.ToString(), location);
     }
@@ -56,9 +55,10 @@ public class CreateTests : BaseIntegrationTest
         HttpResponseMessage response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
-
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
         Assert.NotNull(accountInDb);
         Assert.Equal(accountName, accountInDb.Name);
     }
@@ -76,8 +76,10 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
 
         Assert.NotNull(accountInDb);
         Assert.Equal(maxLengthName, accountInDb.Name);
@@ -95,8 +97,10 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
 
         Assert.NotNull(accountInDb);
         Assert.Equal("Account #1 - $pecial & Symbols! @2024", accountInDb.Name);
@@ -114,8 +118,10 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
 
         Assert.NotNull(accountInDb);
         Assert.Equal("Conta Teste - 测试账户 - Тестовий рахунок", accountInDb.Name);
@@ -132,7 +138,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError(
@@ -152,7 +158,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Name must be informed."),
@@ -170,7 +176,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Name must be informed."),
@@ -191,8 +197,10 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
 
         Assert.NotNull(accountInDb);
         Assert.Equal(Currency.BRL, accountInDb.Currency);
@@ -209,8 +217,10 @@ public class CreateTests : BaseIntegrationTest
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
-        Account? accountInDb = await GetAccountInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<Response>();
+        Account? accountInDb = await Context.GetAccountByIdAsync(
+            AccountId.Create(result!.Value.Id)
+        );
 
         Assert.NotNull(accountInDb);
         Assert.Equal(Currency.USD, accountInDb.Currency);
@@ -226,18 +236,11 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/accounts", invalidCommand);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateAccountResponse>();
+        var result = await response.ReadAsResultAsync<Response>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("The field Currency must be a valid currency."),
             result?.Error
         );
-    }
-
-    private async Task<Account?> GetAccountInDb(Guid? id)
-    {
-        AccountId accountId = new(id.GetValueOrDefault());
-        Account? accountInDb = await Context.Accounts.FindAsync(accountId);
-        return accountInDb;
     }
 }

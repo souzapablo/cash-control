@@ -1,5 +1,4 @@
 using System.Net;
-using CashControl.Domain.Accounts;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models.Accounts;
@@ -29,7 +28,7 @@ public class ListTests : BaseIntegrationTest
         // Act
         await Context.Database.ExecuteSqlRawAsync("DELETE FROM accounts;");
         var response = await Client.GetAsync("/api/accounts");
-        var result = response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
+        var result = await response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
 
         // Assert
         Assert.True(result?.IsSuccess);
@@ -41,34 +40,36 @@ public class ListTests : BaseIntegrationTest
     public async Task Should_ReturnOnlyActiveAccounts_When_InactiveAccountsExist()
     {
         // Arrange
-        Account activeAccount1 = await CreateAccountInDb("Active Account 1");
-        Account deletedAccount = await CreateAccountInDb("Deleted Account");
+        Guid activeAccount1 = await Context.CreateAccountAsync("Active Account 1");
+        Guid deletedAccount = await Context.CreateAccountAsync("Deleted Account");
         var countResponse = await Client.GetAsync("/api/accounts");
-        var countResult = countResponse.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
+        var countResult = await countResponse.ReadAsResultAsync<
+            IEnumerable<ListAccountsResponse>
+        >();
 
-        await Client.DeleteAsync($"/api/accounts/{deletedAccount.Id.Value}");
+        await Client.DeleteAsync($"/api/accounts/{deletedAccount}");
 
         // Act
         var response = await Client.GetAsync("/api/accounts");
-        var result = response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
+        var result = await response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
 
         // Assert
         var accounts = result?.Value.ToList();
         var activeAccounts = countResult?.Value.Count() - 1;
         Assert.Equal(activeAccounts, accounts?.Count);
-        Assert.Contains(accounts!, a => a.Id == activeAccount1.Id.Value);
-        Assert.DoesNotContain(accounts!, a => a.Id == deletedAccount.Id.Value);
+        Assert.Contains(accounts!, a => a.Id == activeAccount1);
+        Assert.DoesNotContain(accounts!, a => a.Id == deletedAccount);
     }
 
     [Fact(DisplayName = "Should return correct account data structure")]
     public async Task Should_ReturnCorrectAccountDataStructure_When_AccountsExist()
     {
         // Arrange
-        Account account = await CreateAccountInDb("Test Account");
+        Guid accountId = await Context.CreateAccountAsync("Test Account");
 
         // Act
         var response = await Client.GetAsync("/api/accounts");
-        var result = response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
+        var result = await response.ReadAsResultAsync<IEnumerable<ListAccountsResponse>>();
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -76,20 +77,12 @@ public class ListTests : BaseIntegrationTest
         Assert.NotNull(result?.Value);
 
         var accounts = result.Value.ToList();
-        var returnedAccount = accounts.FirstOrDefault(a => a.Id == account.Id.Value);
+        var returnedAccount = accounts.FirstOrDefault(a => a.Id == accountId);
 
         Assert.NotNull(returnedAccount);
-        Assert.Equal(account.Id.Value, returnedAccount.Id);
-        Assert.Equal(account.Name, returnedAccount.Name);
-        Assert.Equal(account.Balance.Value, returnedAccount.Balance.Amount);
-        Assert.Equal(account.Balance.Currency.ToString(), returnedAccount.Balance.Currency);
-    }
-
-    private async Task<Account> CreateAccountInDb(string name)
-    {
-        Account account = Account.Create(name);
-        Context.Accounts.Add(account);
-        await Context.SaveChangesAsync();
-        return account;
+        Assert.Equal(accountId, returnedAccount.Id);
+        Assert.Equal("Test Account", returnedAccount.Name);
+        Assert.Equal(0, returnedAccount.Balance.Amount);
+        Assert.Equal("BRL", returnedAccount.Balance.Currency);
     }
 }

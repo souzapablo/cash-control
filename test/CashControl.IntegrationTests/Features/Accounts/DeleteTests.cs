@@ -1,10 +1,8 @@
 using System.Net;
-using CashControl.Domain.Accounts;
 using CashControl.Domain.Errors;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace CashControl.IntegrationTests.Features.Accounts;
@@ -18,7 +16,7 @@ public class DeleteTests : BaseIntegrationTest
     public async Task Should_Return204NoContent_When_AccountIsDeletedSuccessfully()
     {
         // Arrange
-        Guid accountId = await CreateAccountInDb("Test Account");
+        Guid accountId = await Context.CreateAccountAsync("Test Account");
 
         // Act
         var response = await Client.DeleteAsync($"api/accounts/{accountId}");
@@ -31,10 +29,10 @@ public class DeleteTests : BaseIntegrationTest
     public async Task Should_SetIsActiveToFalse_When_AccountIsDeletedSuccessfully()
     {
         // Arrange
-        Guid accountId = await CreateAccountInDb("Test Account");
+        Guid accountId = await Context.CreateAccountAsync("Test Account");
         // Act
         await Client.DeleteAsync($"api/accounts/{accountId}");
-        var deletedAccount = await GetAccountInDb(accountId);
+        var deletedAccount = await Context.GetDeletedAccountByIdAsync(accountId);
 
         // Assert
 
@@ -64,26 +62,8 @@ public class DeleteTests : BaseIntegrationTest
         var response = await Client.DeleteAsync($"api/accounts/{accountId}");
 
         // Assert
-        var result = response.ReadAsResultAsync<Result>();
+        var result = await response.ReadAsResultAsync<Result>();
         Assert.False(result?.IsSuccess);
         Assert.Equal(AccountErrors.AccountNotFound(accountId), result?.Error);
-    }
-
-    private async Task<Guid> CreateAccountInDb(string name)
-    {
-        Account account = Account.Create(name);
-        Context.Accounts.Add(account);
-        await Context.SaveChangesAsync();
-        return account.Id.Value;
-    }
-
-    private async Task<Account?> GetAccountInDb(Guid? id)
-    {
-        AccountId accountId = new(id.GetValueOrDefault());
-        Account? accountInDb = await Context
-            .Accounts.AsNoTracking()
-            .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(a => a.Id == accountId);
-        return accountInDb;
     }
 }

@@ -40,7 +40,7 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.NotNull(response.Headers.Location);
 
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
         var location = response.Headers.Location.ToString();
         Assert.Contains(result!.Value.Id.ToString(), location);
     }
@@ -56,8 +56,8 @@ public class CreateTests : BaseIntegrationTest
         HttpResponseMessage response = await Client.PostAsJsonAsync("/api/categories", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
-        Category? categoryInDb = await GetCategoryInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
+        Category? categoryInDb = await Context.GetCategoryByIdAsync(result!.Value.Id);
 
         Assert.NotNull(categoryInDb);
         Assert.Equal(categoryName, categoryInDb.Name);
@@ -76,8 +76,8 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
-        Category? categoryInDb = await GetCategoryInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
+        Category? categoryInDb = await Context.GetCategoryByIdAsync(result!.Value.Id);
 
         Assert.NotNull(categoryInDb);
         Assert.Equal(maxLengthName, categoryInDb.Name);
@@ -95,8 +95,8 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
-        Category? categoryInDb = await GetCategoryInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
+        Category? categoryInDb = await Context.GetCategoryByIdAsync(result!.Value.Id);
 
         Assert.NotNull(categoryInDb);
         Assert.Equal("Category #1 - $pecial & Symbols! @2024", categoryInDb.Name);
@@ -114,8 +114,8 @@ public class CreateTests : BaseIntegrationTest
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
-        Category? categoryInDb = await GetCategoryInDb(result?.Value.Id);
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
+        Category? categoryInDb = await Context.GetCategoryByIdAsync(result!.Value.Id);
 
         Assert.NotNull(categoryInDb);
         Assert.Equal("Categoria Teste - 测试类别 - Тестова категорія", categoryInDb.Name);
@@ -132,7 +132,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/categories", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("Category name cannot exceed 200 characters."),
@@ -150,7 +150,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/categories", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("Category name cannot be empty."),
@@ -168,7 +168,7 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/categories", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("Category name cannot be empty."),
@@ -186,24 +186,11 @@ public class CreateTests : BaseIntegrationTest
         var response = await Client.PostAsJsonAsync("/api/categories", command);
 
         // Assert
-        var result = response.ReadAsResultAsync<CreateCategoryResponse>();
+        var result = await response.ReadAsResultAsync<CreateCategoryResponse>();
         Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
         Assert.Equal(
             Domain.Primitives.Error.ValidationError("Category name cannot be empty."),
             result?.Error
         );
-    }
-
-    private async Task<Category?> GetCategoryInDb(Guid? id)
-    {
-        if (id is null)
-            return null;
-
-        CategoryId categoryId = CategoryId.Create(id.Value);
-        Category? categoryInDb = await Context
-            .Categories.AsNoTracking()
-            .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(c => c.Id == categoryId);
-        return categoryInDb;
     }
 }

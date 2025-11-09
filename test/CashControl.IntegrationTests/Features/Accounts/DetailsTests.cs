@@ -32,7 +32,7 @@ public class DetailsTests : BaseIntegrationTest
             account.Id == Data.DefaultAccount.Id
         );
         var response = await Client.GetAsync($"/api/accounts/{Data.DefaultAccount.Id.Value}");
-        var result = response.ReadAsResultAsync<AccountDetailsResponse>();
+        var result = await response.ReadAsResultAsync<AccountDetailsResponse>();
 
         // Assert
         Assert.Equal(defaultAccount?.Balance.Value, result?.Value?.Balance.Amount);
@@ -62,7 +62,7 @@ public class DetailsTests : BaseIntegrationTest
 
         // Act
         var response = await Client.GetAsync($"/api/accounts/{accountId}");
-        var result = response.ReadAsResultAsync<AccountDetailsResponse>();
+        var result = await response.ReadAsResultAsync<AccountDetailsResponse>();
 
         // Assert
         Assert.False(result?.IsSuccess);
