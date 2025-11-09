@@ -15,14 +15,14 @@ public class Create
     public class CreateCategoryEndpoint : IEndpoint
     {
         public static void Map(IEndpointRouteBuilder app) =>
-            app.MapPost("", HandleAsnyc)
+            app.MapPost("", HandleAsync)
                 .WithName("Categories: Create")
                 .WithSummary("Creates a new category")
                 .WithDescription("Creates a new category with the given name.");
 
         private static async Task<
             Results<BadRequest<Result>, Created<Result<Response>>>
-        > HandleAsnyc(
+        > HandleAsync(
             Command command,
             CashControlDbContext dbContext,
             CancellationToken cancellationToken
