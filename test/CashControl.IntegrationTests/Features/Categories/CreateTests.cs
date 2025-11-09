@@ -4,7 +4,6 @@ using CashControl.Domain.Categories;
 using CashControl.IntegrationTests.Extensions;
 using CashControl.IntegrationTests.Infrastructure;
 using CashControl.IntegrationTests.Models.Categories;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 using static CashControl.Api.Feature.Categories.Create;
 
