@@ -6,7 +6,7 @@ public class CategoryId : EntityId<Guid>
 {
     protected CategoryId() { }
 
-    public CategoryId(Guid value)
+    private CategoryId(Guid value)
         : base(value) { }
 
     public static CategoryId Create(Guid value) => new(value);
